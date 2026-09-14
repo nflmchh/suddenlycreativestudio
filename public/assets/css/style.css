@@ -501,7 +501,7 @@ ul {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 14px;
-  align-items: center;
+  align-items: start;
   position: relative;
   z-index: 1;
 }
@@ -1325,7 +1325,8 @@ ul {
   .hero {
     min-height: auto;
     padding-top: calc(var(--nav-height) + 24px);
-    padding-bottom: 40px;
+    padding-bottom: 32px;
+    background-image: linear-gradient(rgba(247, 246, 251, 0.72), rgba(247, 246, 251, 0.72)), url("../img/hero-vaporwave.gif");
   }
 
   .hero-actions {
