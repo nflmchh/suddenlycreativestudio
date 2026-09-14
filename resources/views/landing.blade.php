@@ -192,7 +192,7 @@
     </section>
 
     <div class="section-boundary-decor" aria-hidden="true">
-        <img src="{{ asset('assets/img/sandal-spin.gif') }}" alt="">
+        <img src="{{ asset('assets/img/sandal-spin-v2.gif') }}" alt="">
     </div>
 
     <!-- Services -->
