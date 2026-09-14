@@ -499,7 +499,7 @@ ul {
 
 .hero-inner {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: 1fr;
   gap: 14px;
   align-items: start;
   position: relative;
@@ -520,21 +520,21 @@ ul {
 }
 
 .hero-copy-body {
-  padding: 10px;
+  padding: 20px;
 }
 
 .hero-copy .section-tag {
-  font-size: 9px;
-  padding: 3px 8px;
-  margin-bottom: 8px;
+  font-size: 12px;
+  padding: 4px 12px;
+  margin-bottom: 14px;
 }
 
 .hero-copy h1 {
-  font-size: clamp(16px, 5.8vw, 26px);
+  font-size: clamp(28px, 8vw, 40px);
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1.18;
-  margin-bottom: 10px;
+  line-height: 1.15;
+  margin-bottom: 16px;
 }
 
 .hero-copy h1 .gradient-text {
@@ -549,25 +549,29 @@ ul {
 }
 
 .hero-copy p {
-  display: none;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.55;
   color: var(--y2k-ink-muted);
-  margin-bottom: 14px;
+  margin-bottom: 22px;
   max-width: 520px;
 }
 
 .hero-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .hero-actions .btn {
-  padding: 7px 8px;
-  font-size: 10px;
-  gap: 4px;
-  flex: 1 1 auto;
+  padding: 11px 18px;
+  font-size: 14px;
+  gap: 6px;
+  justify-content: center;
+}
+
+.hero-window {
+  display: none;
 }
 
 .hero-window {
@@ -1241,12 +1245,13 @@ ul {
   }
 
   .hero-copy p {
-    display: block;
     font-size: 18px;
     margin-bottom: 34px;
   }
 
   .hero-actions {
+    flex-direction: row;
+    align-items: center;
     gap: 14px;
   }
 
@@ -1254,7 +1259,11 @@ ul {
     padding: 12px 24px;
     font-size: 15px;
     gap: 8px;
-    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+
+  .hero-window {
+    display: block;
   }
 
   .hero-window-bar {
