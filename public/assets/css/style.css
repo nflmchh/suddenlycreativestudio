@@ -370,12 +370,12 @@ ul {
   margin-inline: auto;
 }
 
-#about { background: var(--tint-blue); }
-#services { background: var(--bg-page); }
+#about { background: var(--tint-blue); padding-bottom: 24px; }
+#services { background: var(--bg-page); padding-top: 24px; }
 
 .section-boundary-decor {
   position: relative;
-  height: clamp(56px, 11vw, 130px);
+  height: clamp(90px, 16vw, 190px);
   z-index: 5;
   pointer-events: none;
 }
