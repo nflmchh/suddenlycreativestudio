@@ -372,7 +372,22 @@ ul {
 
 #about { background: var(--tint-blue); }
 #services { background: var(--bg-page); }
-#portfolio { background: var(--tint-pink); }
+#portfolio {
+  background: var(--tint-pink);
+  transition: background-color 0.4s ease;
+}
+
+#portfolio.vaporwave-active {
+  background-color: #0a0a14;
+  background-image: linear-gradient(rgba(8, 6, 20, 0.55), rgba(8, 6, 20, 0.55)), url("../img/portfolio-vaporwave.gif");
+  background-size: cover;
+  background-position: center;
+}
+
+#portfolio.vaporwave-active .section-heading h2,
+#portfolio.vaporwave-active .section-heading p {
+  color: #fff;
+}
 #shop { background: var(--tint-lemon); }
 #contact { background: var(--tint-lilac); }
 

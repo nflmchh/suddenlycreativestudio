@@ -112,7 +112,7 @@
                     <h1>Mewujudkan ide jadi <span class="gradient-text">karya visual</span> yang berkesan</h1>
                     <p>Suddenly Creative Studio membantu brand dan event Anda tampil maksimal lewat visual production, 3D animation, motion design, hingga manajemen show — dari Bandung untuk klien di mana saja.</p>
                     <div class="hero-actions">
-                        <a href="#portfolio" class="btn btn-primary">
+                        <a href="#portfolio" id="lihat-karya-btn" class="btn btn-primary">
                             <i class="ph ph-play"></i> Lihat Karya
                         </a>
                         <a href="{{ $waLink }}" target="_blank" rel="noopener" class="btn btn-glass">
