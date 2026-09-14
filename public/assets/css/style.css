@@ -375,18 +375,18 @@ ul {
 
 .section-boundary-decor {
   position: relative;
-  height: 0;
+  height: clamp(120px, 22vw, 260px);
   z-index: 5;
   pointer-events: none;
 }
 
 .section-boundary-decor img {
   position: absolute;
-  left: clamp(12px, 4vw, 40px);
-  top: 0;
+  left: clamp(16px, 5vw, 56px);
+  top: 50%;
   transform: translateY(-50%);
-  width: clamp(56px, 10vw, 130px);
-  height: auto;
+  height: 100%;
+  width: auto;
 }
 #portfolio {
   background-color: #0a0a14;

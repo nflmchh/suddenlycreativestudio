@@ -1,6 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
   var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Strip #anchor from the URL after the scroll happens, so a later
+  // refresh/visit lands at the top instead of jumping back to that section.
+  var cleanUrlHash = function () {
+    window.setTimeout(function () {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }, 900);
+  };
+
+  if (window.location.hash) {
+    cleanUrlHash();
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener("click", cleanUrlHash);
+  });
+
   // Mobile menu toggle
   var toggle = document.querySelector(".nav-toggle");
   var mobileMenu = document.querySelector(".mobile-menu");
