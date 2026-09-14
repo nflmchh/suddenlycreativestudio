@@ -373,19 +373,14 @@ ul {
 #about { background: var(--tint-blue); }
 #services { background: var(--bg-page); }
 #portfolio {
-  background: var(--tint-pink);
-  transition: background-color 0.4s ease;
-}
-
-#portfolio.vaporwave-active {
   background-color: #0a0a14;
   background-image: url("../img/portfolio-vaporwave-v2.gif");
   background-size: cover;
   background-position: center;
 }
 
-#portfolio.vaporwave-active .section-heading h2,
-#portfolio.vaporwave-active .section-heading p {
+#portfolio .section-heading h2,
+#portfolio .section-heading p {
   color: #fff;
 }
 #shop { background: var(--tint-lemon); }

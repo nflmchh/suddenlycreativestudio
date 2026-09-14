@@ -160,14 +160,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateSlides();
   }
-
-  // "Lihat Karya" swaps the Portfolio section into its vaporwave background
-  var lihatKaryaBtn = document.getElementById("lihat-karya-btn");
-  var portfolioSection = document.getElementById("portfolio");
-
-  if (lihatKaryaBtn && portfolioSection) {
-    lihatKaryaBtn.addEventListener("click", function () {
-      portfolioSection.classList.add("vaporwave-active");
-    });
-  }
 });
