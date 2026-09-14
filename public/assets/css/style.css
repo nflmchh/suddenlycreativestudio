@@ -372,6 +372,22 @@ ul {
 
 #about { background: var(--tint-blue); }
 #services { background: var(--bg-page); }
+
+.section-boundary-decor {
+  position: relative;
+  height: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.section-boundary-decor img {
+  position: absolute;
+  left: clamp(12px, 4vw, 40px);
+  top: 0;
+  transform: translateY(-50%);
+  width: clamp(56px, 10vw, 130px);
+  height: auto;
+}
 #portfolio {
   background-color: #0a0a14;
   background-image: url("../img/portfolio-vaporwave-v2.gif");
