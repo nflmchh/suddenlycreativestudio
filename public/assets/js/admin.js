@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Show the "Demo URL" field only for Web & Apps Development events —
+  // it's not relevant for visual/event categories.
+  var categorySelect = document.getElementById("category");
+  var demoUrlField = document.getElementById("demoUrlField");
+  if (categorySelect && demoUrlField) {
+    var toggleDemoUrlField = function () {
+      demoUrlField.style.display = categorySelect.value === "web-apps" ? "" : "none";
+    };
+    categorySelect.addEventListener("change", toggleDemoUrlField);
+    toggleDemoUrlField();
+  }
+
   // Client logos — WebP/SVG get converted to PNG in the browser before
   // upload, since GD on this host can't decode WebP at all and SVG mime
   // sniffing is unreliable server-side. Rasterizing here also strips any

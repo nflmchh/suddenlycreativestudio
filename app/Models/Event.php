@@ -12,6 +12,7 @@ class Event extends Model
         'title',
         'category',
         'client',
+        'demo_url',
         'description',
         'cover_image',
         'sort_order',

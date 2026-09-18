@@ -21,6 +21,12 @@
     <input type="text" id="client" name="client" value="{{ old('client', $event->client ?? '') }}">
 </div>
 
+<div class="field" id="demoUrlField">
+    <label for="demo_url">URL Demo Langsung (opsional)</label>
+    <input type="url" id="demo_url" name="demo_url" placeholder="https://suddenlycreativestudio.com/code-quest/" value="{{ old('demo_url', $event->demo_url ?? '') }}">
+    <p class="hint">Kalau diisi, tombol "Coba Demo Langsung" akan muncul di modal portofolio untuk project ini. Biasanya untuk Web & Apps Development.</p>
+</div>
+
 <div class="field">
     <label for="description">Deskripsi (opsional)</label>
     <textarea id="description" name="description">{{ old('description', $event->description ?? '') }}</textarea>

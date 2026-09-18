@@ -263,6 +263,11 @@
                                 @if ($event->client)
                                     <span class="event-modal-client">Client: {{ $event->client }}</span>
                                 @endif
+                                @if ($event->demo_url)
+                                    <a href="{{ $event->demo_url }}" target="_blank" rel="noopener" class="btn btn-glass btn-sm event-modal-demo">
+                                        <i class="ph ph-arrow-square-out"></i> Coba Demo Langsung
+                                    </a>
+                                @endif
                             </div>
                             @if ($event->description)
                                 <p class="event-modal-desc">{{ $event->description }}</p>
