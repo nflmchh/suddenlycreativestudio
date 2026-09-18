@@ -117,30 +117,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function capturePosterFrame(file) {
     return new Promise(function (resolve) {
+      var settled = false;
+
+      // Safari frequently never fires loadeddata/seeked on a <video> that
+      // isn't attached to the document, leaving the frame capture stuck
+      // until the timeout — so it's appended (invisibly) to the DOM here,
+      // and both "seeked" and "timeupdate" can trigger the grab since
+      // Safari doesn't always fire "seeked" reliably either.
       var video = document.createElement("video");
       video.muted = true;
       video.playsInline = true;
-      video.preload = "metadata";
-      video.src = URL.createObjectURL(file);
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      video.preload = "auto";
+      video.style.cssText = "position:fixed; top:0; left:0; width:2px; height:2px; opacity:0; pointer-events:none;";
+      document.body.appendChild(video);
 
-      var settled = false;
       var finish = function (dataUrl) {
         if (settled) return;
         settled = true;
         URL.revokeObjectURL(video.src);
+        if (video.parentNode) video.parentNode.removeChild(video);
         resolve(dataUrl || "");
       };
 
-      video.addEventListener("loadeddata", function () {
+      var grabFrame = function () {
+        if (settled) return;
         try {
-          video.currentTime = Math.min(1, (video.duration || 2) / 2);
-        } catch (e) {
-          finish("");
-        }
-      });
-
-      video.addEventListener("seeked", function () {
-        try {
+          if (!video.videoWidth) return;
           var maxWidth = 480;
           var scale = Math.min(1, maxWidth / video.videoWidth);
           var canvas = document.createElement("canvas");
@@ -151,11 +155,35 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (e) {
           finish("");
         }
+      };
+
+      video.addEventListener("loadedmetadata", function () {
+        try {
+          video.currentTime = Math.min(1, (video.duration || 2) / 2);
+        } catch (e) {
+          /* timeupdate below still catches the frame once buffered */
+        }
+      });
+
+      video.addEventListener("seeked", grabFrame);
+      video.addEventListener("timeupdate", function () {
+        // Ignore the very first frames of playback so this doesn't grab a
+        // black/blank intro frame before the seek-to-middle above lands.
+        if (video.currentTime > 0.15) {
+          grabFrame();
+        }
       });
 
       video.addEventListener("error", function () {
         finish("");
       });
+
+      video.src = URL.createObjectURL(file);
+      video.load();
+      var playAttempt = video.play();
+      if (playAttempt && playAttempt.catch) {
+        playAttempt.catch(function () {});
+      }
 
       window.setTimeout(function () {
         finish("");

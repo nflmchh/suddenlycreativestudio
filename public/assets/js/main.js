@@ -213,11 +213,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var watermark = document.createElement("div");
     watermark.className = "video-watermark";
     watermark.setAttribute("aria-hidden", "true");
-    for (var i = 0; i < 6; i++) {
-      var span = document.createElement("span");
-      span.textContent = "SUDDENLY CREATIVE";
-      watermark.appendChild(span);
-    }
+    var span = document.createElement("span");
+    span.textContent = "SUDDENLY CREATIVE";
+    watermark.appendChild(span);
     return watermark;
   };
 
