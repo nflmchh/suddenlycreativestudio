@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
   var submitBtn = form.querySelector('button[type="submit"]');
 
   var VIDEO_COMPRESS_THRESHOLD = 15 * 1024 * 1024; // 15MB — smaller files skip compression
-  var VIDEO_HARD_LIMIT = 700 * 1024 * 1024; // above this, browser WASM gets unreliable
+  var VIDEO_HARD_LIMIT = 180 * 1024 * 1024; // above this, browser WASM is too slow/unreliable — upload raw instead
+  var COMPRESS_TIMEOUT_MS = 3 * 60 * 1000; // if compression itself hangs, bail out and upload raw
   var IMAGE_RESIZE_THRESHOLD = 2 * 1024 * 1024; // 2MB
   var IMAGE_MAX_DIMENSION = 1920;
 
@@ -71,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return Promise.resolve(file);
     }
 
-    return loadFfmpeg()
+    var compressPromise = loadFfmpeg()
       .then(function (ffmpeg) {
         var inputName = "in_" + index + "_" + Date.now() + ".mp4";
         var outputName = "out_" + index + "_" + Date.now() + ".mp4";
@@ -120,6 +121,15 @@ document.addEventListener("DOMContentLoaded", function () {
         console.warn("Kompresi video gagal, upload file asli:", err);
         return file;
       });
+
+    var timeoutPromise = new Promise(function (resolve) {
+      window.setTimeout(function () {
+        onProgress(0, "Kompresi terlalu lama, mengupload file asli...");
+        resolve(file);
+      }, COMPRESS_TIMEOUT_MS);
+    });
+
+    return Promise.race([compressPromise, timeoutPromise]);
   }
 
   function resizeImage(file) {
