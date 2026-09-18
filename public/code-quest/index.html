@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Quest</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Code Quest</span>
+        </div>
+
+        <div class="stats">
+          <div id="playerLabel" class="chip player-label hidden"></div>
+          <div class="chip">
+            <span class="stat-icon star-icon" aria-hidden="true"></span>
+            <span id="starCount">0</span>
+          </div>
+          <div class="chip">
+            <span class="stat-icon badge-icon" aria-hidden="true"></span>
+            <span id="levelCount">1/10</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="game-panel">
+        <aside class="mission-panel">
+          <div class="companion-area">
+            <div id="companionFlight" class="companion-flight">
+              <button id="robotCompanion" class="robot" type="button" aria-label="Minta bantuan dari Sudy">
+                <span class="robot-antenna"></span>
+                <span class="robot-body">
+                  <span class="robot-eye robot-eye-left"></span>
+                  <span class="robot-eye robot-eye-right"></span>
+                  <span class="robot-mouth"></span>
+                </span>
+                <span class="robot-name">Sudy</span>
+              </button>
+              <div id="robotBubble" class="robot-bubble" aria-live="polite">
+                Hai! Aku Sudy. Aku akan menemanimu belajar.
+              </div>
+            </div>
+          </div>
+          <div class="mission-box">
+            <p class="label">Misi kita</p>
+            <h2 id="missionTitle">Siap?</h2>
+            <p id="missionText">
+              Yuk belajar coding pelan-pelan, satu langkah setiap kali.
+            </p>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-label">
+              <span>Sudah sampai mana?</span>
+              <span id="progressText">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div id="progressFill"></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="play-panel">
+          <div id="startScreen" class="screen active">
+            <div class="intro-card">
+              <div class="launch-scene" aria-hidden="true">
+                <span class="scene-glow glow-one"></span>
+                <span class="scene-glow glow-two"></span>
+                <span class="orbit orbit-one"></span>
+                <span class="orbit orbit-two"></span>
+                <span class="scene-star star-one"></span>
+                <span class="scene-star star-two"></span>
+                <span class="scene-star star-three"></span>
+                <span class="scene-card scene-card-one">01</span>
+                <span class="scene-card scene-card-two">if</span>
+                <span class="scene-card scene-card-three">[ ]</span>
+                <span class="mini-robot">
+                  <span class="mini-antenna"></span>
+                  <span class="mini-face"><span></span><span></span><i></i></span>
+                </span>
+                <span class="scene-path"></span>
+              </div>
+              <p class="eyebrow">Petualangan coding bareng Sudy</p>
+              <h1>Yuk kenalan dengan Python!</h1>
+              <p>
+                Kita akan main di 10 level seru. Di setiap level, kamu akan menemukan
+                cara kerja komputer sedikit demi sedikit.
+              </p>
+              <div class="journey-strip" aria-label="Peta perjalanan belajar">
+                <div class="journey-step active">
+                  <span class="journey-number">1</span>
+                  <span><strong>Kenalan</strong><small>lihat cara kerja komputer</small></span>
+                </div>
+                <span class="journey-line"></span>
+                <div class="journey-step">
+                  <span class="journey-number">2</span>
+                  <span><strong>Coba</strong><small>jawab misi kecil</small></span>
+                </div>
+                <span class="journey-line"></span>
+                <div class="journey-step">
+                  <span class="journey-number">3</span>
+                  <span><strong>Jago</strong><small>buat sesuatu sendiri</small></span>
+                </div>
+              </div>
+              <div id="resumeCard" class="resume-card hidden" aria-live="polite">
+                <span class="resume-orb" aria-hidden="true"></span>
+                <div>
+                  <strong id="resumeTitle">Sudy ingat perjalananmu!</strong>
+                  <p id="resumeText">Kita bisa melanjutkan dari level berikutnya.</p>
+                </div>
+                <span class="resume-stars"><span class="star-icon" aria-hidden="true"></span><span id="resumeStars">0</span></span>
+              </div>
+              <label class="name-label" for="playerName">Namamu siapa?</label>
+              <input id="playerName" class="name-input" type="text" maxlength="24" autocomplete="given-name" placeholder="Tulis nama kamu di sini" />
+              <p id="nameMessage" class="name-message" aria-live="polite"></p>
+              <button id="startBtn" class="primary large" disabled>Ayo Mulai!</button>
+            </div>
+          </div>
+
+          <div id="gameScreen" class="screen hidden">
+            <div class="concept-card">
+              <div class="concept-heading">
+                <span class="concept-icon">🧩</span>
+                <div>
+                  <p class="label">Kenalan dulu</p>
+                  <h3 id="conceptTitle">Bagian ini maksudnya apa, ya?</h3>
+                </div>
+              </div>
+              <p id="conceptText"></p>
+              <div id="conceptParts" class="concept-parts"></div>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <pre id="codeSnippet"></pre>
+            </div>
+
+            <div class="story-card">
+              <span class="story-icon">📖</span>
+              <div>
+                <p class="label">Cerita kita</p>
+                <p id="storyText">Sudy butuh bantuanmu menyelesaikan misi ini.</p>
+              </div>
+            </div>
+
+            <div class="question-card">
+              <h3 id="questionText">Menurutmu, jawaban yang benar yang mana?</h3>
+              <div id="answers" class="answers"></div>
+
+              <div id="feedback" class="feedback hidden"></div>
+
+              <div id="reward" class="reward hidden"></div>
+
+              <div class="button-row">
+                <button id="hintBtn" class="secondary">Tolong aku</button>
+                <button id="nextBtn" class="primary hidden">Lanjut yuk</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="endScreen" class="screen hidden">
+            <div class="finish-card">
+              <div class="finish-emblem" aria-hidden="true"><span></span></div>
+              <p class="eyebrow">Ruang Kreator Sudy</p>
+              <h2>Misinya selesai!</h2>
+              <p id="resultText">Kamu berhasil!</p>
+              <div class="creator-stats">
+                <div><strong id="finishStars">0</strong><span>bintang</span></div>
+                <div><strong>10</strong><span>misi selesai</span></div>
+                <div><strong>1</strong><span>lencana baru</span></div>
+              </div>
+              <div class="next-adventure">
+                <div class="adventure-art" aria-hidden="true"><span></span><i></i></div>
+                <div>
+                  <p class="label">Misi bonus terbuka</p>
+                  <h3>Kode Rahasia Sudy</h3>
+                  <p>Temukan pesan rahasia dari potongan kode kecil.</p>
+                </div>
+                <button id="bonusBtn" class="primary">Main bonus</button>
+              </div>
+              <div class="creator-grid">
+                <button id="labBtn" class="creator-card" type="button">
+                  <span class="creator-art lab-art" aria-hidden="true"><i></i></span>
+                  <span><strong>Lab eksperimen</strong><small>ubah kode dan lihat hasilnya</small></span>
+                </button>
+                <button id="collectionBtn" class="creator-card" type="button">
+                  <span class="creator-art collection-art" aria-hidden="true"><i></i></span>
+                  <span><strong>Koleksi lencana</strong><small>lihat kemampuan yang terbuka</small></span>
+                </button>
+              </div>
+              <button id="restartBtn" class="secondary">Mulai dari awal</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="celebration" class="celebration hidden" role="status" aria-live="polite">
+      <div class="celebration-card">
+        <span class="celebration-star">⭐</span>
+        <strong id="celebrationText">Kamu pintar!</strong>
+        <span>Jawaban kamu benar!</span>
+      </div>
+    </div>
+
+    <div id="bonusModal" class="bonus-modal hidden" role="dialog" aria-modal="true" aria-labelledby="bonusTitle">
+      <div class="bonus-card">
+        <button id="closeBonusBtn" class="close-bonus" type="button" aria-label="Tutup misi bonus">×</button>
+        <div class="bonus-art" aria-hidden="true"><span></span><i></i></div>
+        <p class="eyebrow">Misi bonus</p>
+        <p id="bonusRoundLabel" class="bonus-round-label">Misi 1 dari 3</p>
+        <h2 id="bonusTitle">Kode Rahasia Sudy</h2>
+        <p id="bonusDescription">Sudy menemukan kode rahasia. Baca pelan-pelan, lalu tebak pesan yang muncul.</p>
+        <pre id="bonusCode" class="bonus-code"></pre>
+        <div id="bonusAnswers" class="bonus-answers"></div>
+        <p id="bonusFeedback" class="bonus-feedback" aria-live="polite"></p>
+        <button id="bonusNextBtn" class="primary hidden" type="button">Misi berikutnya</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
