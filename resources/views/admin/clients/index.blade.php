@@ -7,12 +7,12 @@
         <h1>Logo Client</h1>
         <p class="hint">Ditampilkan di bagian "Dipercaya Oleh" pada halaman utama. Bisa upload beberapa logo sekaligus.</p>
 
-        <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data" id="clientLogosForm">
             @csrf
             <div class="field">
                 <label for="logos">Upload Logo (bisa pilih beberapa sekaligus)</label>
                 <input type="file" id="logos" name="logos[]" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple required>
-                <p class="hint">Format JPG/PNG/WebP/SVG. Nama client otomatis diambil dari nama file, bisa diubah setelah upload.</p>
+                <p class="hint">Format JPG/PNG/WebP/SVG. WebP dan SVG otomatis dikonversi ke PNG di browser sebelum diupload, supaya aman di server. Nama client otomatis diambil dari nama file, bisa diubah setelah upload.</p>
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">

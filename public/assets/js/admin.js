@@ -1,4 +1,81 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Client logos — WebP/SVG get converted to PNG in the browser before
+  // upload, since GD on this host can't decode WebP at all and SVG mime
+  // sniffing is unreliable server-side. Rasterizing here also strips any
+  // script content an SVG might carry, since it's redrawn onto a canvas.
+  var clientLogosForm = document.getElementById("clientLogosForm");
+  if (clientLogosForm) {
+    var logosInput = document.getElementById("logos");
+
+    var convertToPngIfNeeded = function (file) {
+      var needsConversion =
+        file.type === "image/webp" ||
+        file.type === "image/svg+xml" ||
+        /\.(webp|svg)$/i.test(file.name);
+
+      if (!needsConversion) {
+        return Promise.resolve(file);
+      }
+
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () {
+          var width = img.naturalWidth || 480;
+          var height = img.naturalHeight || 480;
+          var canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          URL.revokeObjectURL(img.src);
+
+          canvas.toBlob(function (blob) {
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            var newName = file.name.replace(/\.[^.]+$/, "") + ".png";
+            resolve(new File([blob], newName, { type: "image/png" }));
+          }, "image/png");
+        };
+        img.onerror = function () {
+          resolve(file);
+        };
+        img.src = URL.createObjectURL(file);
+      });
+    };
+
+    clientLogosForm.addEventListener("submit", function (e) {
+      if (!logosInput || !logosInput.files.length || clientLogosForm.dataset.converted === "1") {
+        return;
+      }
+
+      e.preventDefault();
+      var submitBtn = clientLogosForm.querySelector('button[type="submit"]');
+      var originalLabel = submitBtn ? submitBtn.textContent : "";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Memproses logo...";
+      }
+
+      Promise.all(Array.prototype.slice.call(logosInput.files).map(convertToPngIfNeeded)).then(function (files) {
+        var dataTransfer = new DataTransfer();
+        files.forEach(function (file) {
+          dataTransfer.items.add(file);
+        });
+        logosInput.files = dataTransfer.files;
+        clientLogosForm.dataset.converted = "1";
+        clientLogosForm.submit();
+      }).catch(function () {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
+        clientLogosForm.dataset.converted = "1";
+        clientLogosForm.submit();
+      });
+    });
+  }
+
   function regeneratePoster(btn) {
     var figure = btn.closest("figure");
     var videoSrc = figure ? figure.getAttribute("data-video-src") : null;
