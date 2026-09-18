@@ -466,8 +466,10 @@
 
     <div class="yorii-widget" id="yoriiWidget">
         <button type="button" class="yorii-launcher" id="yoriiLauncher" aria-label="Chat dengan Yorii">
-            <span class="yorii-launcher-avatar" aria-hidden="true">👩‍💼</span>
             <span class="yorii-launcher-label">Tanya Yorii</span>
+            <span class="yorii-launcher-avatar">
+                <img src="{{ asset('assets/img/yorii-avatar.png') }}" alt="">
+            </span>
             <span class="yorii-launcher-badge" id="yoriiLauncherBadge" aria-hidden="true"></span>
         </button>
 
