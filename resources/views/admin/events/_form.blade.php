@@ -55,9 +55,9 @@
     <label for="videos">Tambah Video (bisa pilih beberapa sekaligus)</label>
     <input type="file" id="videos" name="videos[]" accept="video/mp4,video/quicktime,video/webm" multiple>
     <p class="hint">
-        Boleh langsung upload video mentah/renderan asli — file di atas 15MB akan otomatis dikompres di browser
-        sebelum diupload (ada progress bar-nya). Thumbnail video juga dibuat otomatis dari frame pertama.
-        File di atas ~700MB tidak dikompres otomatis (terlalu berat untuk browser), disarankan dikompres manual dulu.
+        Video diupload langsung apa adanya (progress bar akurat sesuai kecepatan internet). Kompres dulu file yang
+        masih besar/mentah sebelum upload supaya website tetap ringan — idealnya di bawah ~20-30MB per video.
+        Thumbnail video dibuat otomatis dari frame pertama.
     </p>
     <div id="videoPosterInputs"></div>
 </div>
