@@ -1,56 +1,109 @@
 document.addEventListener("DOMContentLoaded", function () {
+  function regeneratePoster(btn) {
+    var figure = btn.closest("figure");
+    var videoSrc = figure ? figure.getAttribute("data-video-src") : null;
+    var postUrl = btn.getAttribute("data-media-poster-url");
+    if (!videoSrc || !postUrl) {
+      return Promise.resolve({ ok: false, message: "Data video tidak ditemukan di halaman." });
+    }
+
+    var originalLabel = btn.textContent;
+    var failReason = "";
+    btn.disabled = true;
+    btn.textContent = "Memproses...";
+
+    return fetch(videoSrc)
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error("Video gagal diambil dari server (status " + res.status + ")");
+        }
+        return res.blob();
+      })
+      .then(function (blob) {
+        return capturePosterFrame(blob, function (why) {
+          failReason = why;
+        });
+      })
+      .then(function (dataUrl) {
+        if (!dataUrl) {
+          throw new Error(failReason || "Tidak diketahui");
+        }
+        var token = document.querySelector('meta[name="csrf-token"]');
+        return fetch(postUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": token ? token.getAttribute("content") : "",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ poster: dataUrl }),
+        });
+      })
+      .then(function (res) {
+        if (res.ok) return res.json();
+        return res
+          .json()
+          .catch(function () {
+            return {};
+          })
+          .then(function (data) {
+            throw new Error(data.message || "Server menolak (status " + res.status + ")");
+          });
+      })
+      .then(function (data) {
+        var img = figure.querySelector(".media-thumb-img");
+        if (img && data.poster_url) {
+          img.src = data.poster_url + "?t=" + Date.now();
+        }
+        btn.textContent = originalLabel;
+        btn.disabled = false;
+        return { ok: true };
+      })
+      .catch(function (err) {
+        btn.textContent = originalLabel;
+        btn.disabled = false;
+        return { ok: false, message: err.message };
+      });
+  }
+
   document.querySelectorAll(".regenerate-poster-btn").forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var figure = btn.closest("figure");
-      var videoSrc = figure ? figure.getAttribute("data-video-src") : null;
-      var postUrl = btn.getAttribute("data-media-poster-url");
-      if (!videoSrc || !postUrl) return;
-
-      var originalLabel = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = "Memproses...";
-
-      fetch(videoSrc)
-        .then(function (res) {
-          return res.blob();
-        })
-        .then(function (blob) {
-          return capturePosterFrame(blob);
-        })
-        .then(function (dataUrl) {
-          if (!dataUrl) {
-            throw new Error("empty poster");
-          }
-          var token = document.querySelector('meta[name="csrf-token"]');
-          return fetch(postUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-TOKEN": token ? token.getAttribute("content") : "",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({ poster: dataUrl }),
-          });
-        })
-        .then(function (res) {
-          if (!res.ok) throw new Error("save failed");
-          return res.json();
-        })
-        .then(function (data) {
-          var img = figure.querySelector(".media-thumb-img");
-          if (img && data.poster_url) {
-            img.src = data.poster_url + "?t=" + Date.now();
-          }
-          btn.textContent = originalLabel;
-          btn.disabled = false;
-        })
-        .catch(function () {
-          alert("Gagal membuat thumbnail. Coba lagi, atau hapus dan upload ulang videonya.");
-          btn.textContent = originalLabel;
-          btn.disabled = false;
-        });
+      regeneratePoster(btn).then(function (result) {
+        if (!result.ok) {
+          alert("Gagal membuat thumbnail:\n" + result.message + "\n\nScreenshot pesan ini kalau perlu dikirim untuk diperbaiki.");
+        }
+      });
     });
   });
+
+  var regenerateAllBtn = document.getElementById("regenerateAllPostersBtn");
+  if (regenerateAllBtn) {
+    regenerateAllBtn.addEventListener("click", function () {
+      var buttons = Array.prototype.slice.call(document.querySelectorAll(".regenerate-poster-btn"));
+      var errors = [];
+      var originalLabel = regenerateAllBtn.textContent;
+      regenerateAllBtn.disabled = true;
+
+      buttons
+        .reduce(function (chain, btn, index) {
+          return chain.then(function () {
+            regenerateAllBtn.textContent = "Memproses (" + (index + 1) + "/" + buttons.length + ")...";
+            return regeneratePoster(btn).then(function (result) {
+              if (!result.ok) {
+                errors.push(index + 1 + ". " + result.message);
+              }
+            });
+          });
+        }, Promise.resolve())
+        .then(function () {
+          regenerateAllBtn.disabled = false;
+          regenerateAllBtn.textContent = originalLabel;
+          if (errors.length) {
+            alert("Selesai, tapi " + errors.length + " video gagal dibuat thumbnail-nya:\n" + errors.join("\n"));
+          }
+        });
+    });
+  }
 
   var form = document.getElementById("eventForm");
   if (!form) {
@@ -115,9 +168,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function capturePosterFrame(file) {
+  function capturePosterFrame(file, onReason) {
     return new Promise(function (resolve) {
       var settled = false;
+      var report = function (why) {
+        if (onReason) onReason(why);
+      };
 
       // Safari frequently never fires loadeddata/seeked on a <video> that
       // isn't attached to the document, leaving the frame capture stuck
@@ -133,11 +189,12 @@ document.addEventListener("DOMContentLoaded", function () {
       video.style.cssText = "position:fixed; top:0; left:0; width:2px; height:2px; opacity:0; pointer-events:none;";
       document.body.appendChild(video);
 
-      var finish = function (dataUrl) {
+      var finish = function (dataUrl, why) {
         if (settled) return;
         settled = true;
         URL.revokeObjectURL(video.src);
         if (video.parentNode) video.parentNode.removeChild(video);
+        if (!dataUrl) report(why || "Tidak diketahui");
         resolve(dataUrl || "");
       };
 
@@ -153,7 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
           canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
           finish(canvas.toDataURL("image/jpeg", 0.8));
         } catch (e) {
-          finish("");
+          finish("", "Gagal menggambar frame ke canvas: " + e.message);
         }
       };
 
@@ -175,7 +232,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       video.addEventListener("error", function () {
-        finish("");
+        var code = video.error ? video.error.code : "?";
+        finish("", "Video tidak bisa dibaca browser (kode error " + code + ") — kemungkinan format/codec tidak didukung.");
       });
 
       video.src = URL.createObjectURL(file);
@@ -186,7 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       window.setTimeout(function () {
-        finish("");
+        finish("", "Waktu habis (8 detik) — video tidak kunjung termuat di browser (readyState=" + video.readyState + ", networkState=" + video.networkState + ").");
       }, 8000);
     });
   }

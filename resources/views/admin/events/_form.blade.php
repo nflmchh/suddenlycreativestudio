@@ -65,6 +65,9 @@
 @if ($event && $event->media->isNotEmpty())
     <div class="field">
         <label>Media Saat Ini</label>
+        @if ($event->media->where('type', 'video')->isNotEmpty())
+            <button type="button" id="regenerateAllPostersBtn" class="btn btn-sm" style="margin-bottom:12px;">Buat ulang semua thumbnail video</button>
+        @endif
         <div class="media-grid">
             @foreach ($event->media as $media)
                 <figure @if ($media->isVideo()) data-video-src="{{ asset('storage/'.$media->file_path) }}" @endif>
