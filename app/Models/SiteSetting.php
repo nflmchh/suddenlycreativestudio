@@ -11,6 +11,15 @@ class SiteSetting extends Model
         'phone',
         'email',
         'instagram_username',
+        'anthropic_api_key',
+    ];
+
+    protected $casts = [
+        'anthropic_api_key' => 'encrypted',
+    ];
+
+    protected $hidden = [
+        'anthropic_api_key',
     ];
 
     public static function current(): self

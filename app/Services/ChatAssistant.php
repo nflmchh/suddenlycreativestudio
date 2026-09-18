@@ -15,7 +15,10 @@ class ChatAssistant
 
     public function reply(string $message, array $history = []): string
     {
-        $apiKey = config('services.anthropic.key');
+        // A key entered in the admin panel (encrypted in the DB) takes
+        // priority over the .env value, so the admin can rotate it without
+        // needing server/SSH access.
+        $apiKey = SiteSetting::current()->anthropic_api_key ?: config('services.anthropic.key');
 
         if (! $apiKey) {
             return 'Maaf, fitur chat lagi belum aktif di sisi kami. Boleh langsung hubungi kami lewat WhatsApp ya, biar cepat dibalas.';

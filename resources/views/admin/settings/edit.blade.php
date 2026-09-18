@@ -3,13 +3,13 @@
 @section('title', 'Informasi Kontak')
 
 @section('content')
-    <div class="admin-card">
-        <h1>Informasi Kontak</h1>
-        <p class="hint">Muncul di bagian Kontak, footer, dan tombol WhatsApp/Instagram di halaman utama.</p>
+    <form method="POST" action="{{ route('admin.settings.update') }}" style="max-width:480px;">
+        @csrf
+        @method('PUT')
 
-        <form method="POST" action="{{ route('admin.settings.update') }}" style="max-width:480px;">
-            @csrf
-            @method('PUT')
+        <div class="admin-card">
+            <h1>Informasi Kontak</h1>
+            <p class="hint">Muncul di bagian Kontak, footer, dan tombol WhatsApp/Instagram di halaman utama.</p>
 
             <div class="field">
                 <label for="address">Alamat Studio</label>
@@ -32,10 +32,28 @@
                 <input type="text" id="instagram_username" name="instagram_username" value="{{ old('instagram_username', $setting->instagram_username) }}" placeholder="suddenlycreative.id">
                 <p class="hint">Tanpa tanda "@".</p>
             </div>
+        </div>
 
-            <button type="submit" class="btn btn-primary">
-                <i class="ph ph-check"></i> Simpan Perubahan
-            </button>
-        </form>
-    </div>
+        <div class="admin-card">
+            <h1>Suci — Asisten Chat AI</h1>
+            <p class="hint">API key Anthropic (Claude) supaya Suci bisa menjawab pertanyaan pengunjung secara otomatis di website.</p>
+
+            <div class="field">
+                <label for="anthropic_api_key">API Key Anthropic</label>
+                <input type="password" id="anthropic_api_key" name="anthropic_api_key" placeholder="{{ $setting->anthropic_api_key ? 'Sudah diisi — kosongkan kalau tidak mau ganti' : 'sk-ant-...' }}" autocomplete="off">
+                <p class="hint">Ambil di <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> &rarr; API Keys. Demi keamanan, key yang sudah tersimpan tidak pernah ditampilkan lagi di sini — isi field ini hanya kalau mau ganti dengan yang baru.</p>
+            </div>
+
+            @if ($setting->anthropic_api_key)
+                <div class="field field-checkbox">
+                    <input type="checkbox" id="clear_api_key" name="clear_api_key" value="1">
+                    <label for="clear_api_key" style="margin:0;">Hapus API key (nonaktifkan chat Suci)</label>
+                </div>
+            @endif
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            <i class="ph ph-check"></i> Simpan Perubahan
+        </button>
+    </form>
 @endsection
