@@ -13,14 +13,14 @@
 <body class="admin-body">
     <div class="admin-login-wrap">
         <div class="admin-login-card">
-            <div class="hero-copy" style="max-width:none;">
+            <div class="admin-card">
                 <div class="window-bar">
                     <div class="traffic-lights">
                         <span class="red"></span><span class="yellow"></span><span class="green"></span>
                     </div>
                     <span class="title">login.exe</span>
                 </div>
-                <div class="hero-copy-body" style="padding:24px;">
+                <div class="admin-card-body">
                     <div class="section-tag" style="margin-bottom:16px;">Admin</div>
 
                     @if ($errors->any())

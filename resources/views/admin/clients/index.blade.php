@@ -4,31 +4,42 @@
 
 @section('content')
     <div class="admin-card">
-        <h1>Logo Client</h1>
-        <p class="hint">Ditampilkan di bagian "Dipercaya Oleh" pada halaman utama. Bisa upload beberapa logo sekaligus.</p>
+        <div class="window-bar">
+            <div class="traffic-lights">
+                <span class="red"></span><span class="yellow"></span><span class="green"></span>
+            </div>
+            <span class="title">Logo Client</span>
+        </div>
+        <div class="admin-card-body">
+            <p class="hint">Ditampilkan di bagian "Dipercaya Oleh" pada halaman utama. Bisa upload beberapa logo sekaligus.</p>
 
-        <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data" id="clientLogosForm">
-            @csrf
-            <div class="field">
-                <label for="logos">Upload Logo (bisa pilih beberapa sekaligus)</label>
-                <input type="file" id="logos" name="logos[]" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple required>
-                <p class="hint">Format JPG/PNG/WebP/SVG. WebP dan SVG otomatis dikonversi ke PNG di browser sebelum diupload, supaya aman di server. Nama client otomatis diambil dari nama file, bisa diubah setelah upload.</p>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="ph ph-upload-simple"></i> Upload Logo
-                </button>
-            </div>
-        </form>
+            <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data" id="clientLogosForm">
+                @csrf
+                <div class="field">
+                    <label for="logos">Upload Logo (bisa pilih beberapa sekaligus)</label>
+                    <input type="file" id="logos" name="logos[]" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple required>
+                    <p class="hint">Format JPG/PNG/WebP/SVG. WebP dan SVG otomatis dikonversi ke PNG di browser sebelum diupload, supaya aman di server. Nama client otomatis diambil dari nama file, bisa diubah setelah upload.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ph ph-upload-simple"></i> Upload Logo
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="admin-card">
-        <h1>Daftar Client</h1>
-
-        @if ($clients->isEmpty())
-            <p>Belum ada logo client.</p>
-        @else
-            <div style="overflow-x:auto;">
+        <div class="window-bar">
+            <div class="traffic-lights">
+                <span class="red"></span><span class="yellow"></span><span class="green"></span>
+            </div>
+            <span class="title">Daftar Client</span>
+        </div>
+        <div class="admin-card-body">
+            @if ($clients->isEmpty())
+                <p>Belum ada logo client.</p>
+            @else
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -45,7 +56,7 @@
                                     <img class="thumb" style="width:80px; height:50px; object-fit:contain; background:#fff;" src="{{ asset('storage/'.$client->logo_path) }}" alt="{{ $client->name }}">
                                 </td>
                                 <td colspan="2">
-                                    <form method="POST" action="{{ route('admin.clients.update', $client) }}" style="display:flex; gap:8px; align-items:center;">
+                                    <form method="POST" action="{{ route('admin.clients.update', $client) }}" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                                         @csrf
                                         @method('PUT')
                                         <input type="text" name="name" value="{{ $client->name }}" style="max-width:200px;">
@@ -64,7 +75,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 @endsection

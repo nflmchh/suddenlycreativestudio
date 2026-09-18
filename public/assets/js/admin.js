@@ -1,4 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Mobile nav toggle — same collapse/expand pattern as the public site.
+  var adminNavToggle = document.getElementById("adminNavToggle");
+  var adminNav = document.getElementById("adminNav");
+
+  if (adminNavToggle && adminNav) {
+    adminNavToggle.addEventListener("click", function () {
+      adminNav.classList.toggle("is-open");
+      var isOpen = adminNav.classList.contains("is-open");
+      adminNavToggle.innerHTML = isOpen ? '<i class="ph ph-x"></i>' : '<i class="ph ph-list"></i>';
+    });
+
+    adminNav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        adminNav.classList.remove("is-open");
+        adminNavToggle.innerHTML = '<i class="ph ph-list"></i>';
+      });
+    });
+  }
+
   // Push notifications — lets the admin (using "Add to Home Screen" on
   // Safari/iOS) get notified on their phone whenever Suci captures a lead.
   var pushBtn = document.getElementById("pushToggleBtn");

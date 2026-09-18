@@ -4,12 +4,16 @@
 
 @section('content')
     <div class="admin-card">
-        <h1>Daftar Event</h1>
-
-        @if ($events->isEmpty())
-            <p>Belum ada event. <a href="{{ route('admin.events.create') }}">Tambah event pertama</a>.</p>
-        @else
-            <div style="overflow-x:auto;">
+        <div class="window-bar">
+            <div class="traffic-lights">
+                <span class="red"></span><span class="yellow"></span><span class="green"></span>
+            </div>
+            <span class="title">Daftar Event</span>
+        </div>
+        <div class="admin-card-body">
+            @if ($events->isEmpty())
+                <p>Belum ada event. <a href="{{ route('admin.events.create') }}">Tambah event pertama</a>.</p>
+            @else
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -55,7 +59,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 @endsection
