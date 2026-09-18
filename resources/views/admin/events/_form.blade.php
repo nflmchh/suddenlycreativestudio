@@ -48,15 +48,16 @@
 <div class="field">
     <label for="images">Tambah Foto (bisa pilih beberapa sekaligus)</label>
     <input type="file" id="images" name="images[]" accept="image/jpeg,image/png" multiple>
-    <p class="hint">Format JPG/PNG saja. Setiap foto otomatis diberi watermark. Maks 8MB per foto.</p>
+    <p class="hint">Format JPG/PNG saja. Foto besar (di atas 2MB) otomatis diperkecil di browser sebelum upload, lalu diberi watermark di server.</p>
 </div>
 
 <div class="field">
     <label for="videos">Tambah Video (bisa pilih beberapa sekaligus)</label>
     <input type="file" id="videos" name="videos[]" accept="video/mp4,video/quicktime,video/webm" multiple>
     <p class="hint">
-        Upload video yang sudah dikompres (disarankan 720p, di bawah ~15MB per video) supaya website tetap ringan.
-        Thumbnail video akan dibuat otomatis dari frame pertama.
+        Boleh langsung upload video mentah/renderan asli — file di atas 15MB akan otomatis dikompres di browser
+        sebelum diupload (ada progress bar-nya). Thumbnail video juga dibuat otomatis dari frame pertama.
+        File di atas ~700MB tidak dikompres otomatis (terlalu berat untuk browser), disarankan dikompres manual dulu.
     </p>
     <div id="videoPosterInputs"></div>
 </div>

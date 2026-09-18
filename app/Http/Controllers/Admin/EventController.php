@@ -49,6 +49,10 @@ class EventController extends Controller
         $this->storeImages($request, $event, $watermarker);
         $this->storeVideos($request, $event);
 
+        if ($request->expectsJson()) {
+            return response()->json(['redirect' => route('admin.dashboard')]);
+        }
+
         return redirect()->route('admin.dashboard')->with('status', 'Event berhasil dibuat.');
     }
 
@@ -84,6 +88,10 @@ class EventController extends Controller
 
         $this->storeImages($request, $event, $watermarker);
         $this->storeVideos($request, $event);
+
+        if ($request->expectsJson()) {
+            return response()->json(['redirect' => route('admin.events.edit', $event)]);
+        }
 
         return redirect()->route('admin.events.edit', $event)->with('status', 'Event berhasil diperbarui.');
     }
@@ -122,7 +130,7 @@ class EventController extends Controller
             'sort_order' => ['nullable', 'integer'],
             'cover_image' => ['nullable', 'mimes:jpg,jpeg,png', 'max:8192'],
             'images.*' => ['nullable', 'mimes:jpg,jpeg,png', 'max:8192'],
-            'videos.*' => ['nullable', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:20480'],
+            'videos.*' => ['nullable', 'mimetypes:video/mp4,video/quicktime,video/webm', 'max:61440'],
         ]);
     }
 

@@ -160,6 +160,29 @@ body.admin-body {
   margin-top: 24px;
 }
 
+.upload-progress {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  background: var(--y2k-panel);
+}
+
+.upload-progress-bar {
+  height: 10px;
+  width: 0%;
+  border-radius: var(--radius-sm);
+  background: var(--y2k-mint);
+  border: 1px solid var(--y2k-ink);
+  transition: width 0.2s ease-out;
+}
+
+.upload-progress .hint {
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
 .admin-login-wrap {
   min-height: 100vh;
   display: flex;

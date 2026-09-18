@@ -10,6 +10,11 @@
             @method('PUT')
             @include('admin.events._form', ['event' => $event])
 
+            <div class="upload-progress" id="uploadProgress" style="display:none;">
+                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                <p class="hint" id="uploadProgressLabel">Menyiapkan...</p>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <i class="ph ph-check"></i> Simpan Perubahan
