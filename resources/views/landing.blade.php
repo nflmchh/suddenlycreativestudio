@@ -18,9 +18,8 @@
 
     $categories = config('portfolio.categories');
 
-    $waNumber = '6285172110725';
-    $waLink = 'https://wa.me/' . $waNumber . '?text=' . urlencode('Halo Suddenly Creative Studio, saya ingin bertanya tentang layanan Anda.');
-    $igLink = 'https://instagram.com/suddenlycreative.id';
+    $waLink = $settings->whatsappLink('Halo Suddenly Creative Studio, saya ingin bertanya tentang layanan Anda.');
+    $igLink = $settings->instagramLink();
 @endphp
 <!doctype html>
 <html lang="id">
@@ -57,7 +56,7 @@
             </div>
 
             <div class="nav-cta">
-                <a href="{{ $waLink }}" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta-btn">
+                <a href="{{ $waLink ?: '#contact' }}" target="_blank" rel="noopener" class="btn btn-primary btn-sm nav-cta-btn">
                     <i class="ph ph-whatsapp-logo"></i> <span>Hubungi Kami</span>
                 </a>
                 <button class="nav-toggle" aria-label="Toggle menu">
@@ -97,7 +96,7 @@
                         <a href="#portfolio" class="btn btn-primary">
                             <i class="ph ph-play"></i> Lihat Karya
                         </a>
-                        <a href="{{ $waLink }}" target="_blank" rel="noopener" class="btn btn-glass">
+                        <a href="{{ $waLink ?: '#contact' }}" target="_blank" rel="noopener" class="btn btn-glass">
                             <i class="ph ph-whatsapp-logo"></i> Diskusikan Proyek
                         </a>
                     </div>
@@ -169,7 +168,9 @@
                     <li><i class="ph ph-map-pin"></i> Berbasis di Bandung, Jawa Barat</li>
                     <li><i class="ph ph-squares-four"></i> 12 layanan kreatif dalam satu studio</li>
                     <li><i class="ph ph-users-three"></i> Melayani brand, perusahaan & event organizer</li>
-                    <li><i class="ph ph-instagram-logo"></i> @suddenlycreative.id</li>
+                    @if ($settings->instagram_username)
+                        <li><i class="ph ph-instagram-logo"></i> {{ '@'.$settings->instagram_username }}</li>
+                    @endif
                 </ul>
             </div>
         </div>
@@ -337,9 +338,11 @@
                 </div>
                 <h2>Segera Hadir: Digital Assets &amp; Games</h2>
                 <p>Kami sedang menyiapkan produk digital assets, spin wheel, dan mini games ringan. Ikuti Instagram kami agar tidak ketinggalan update peluncurannya.</p>
-                <a href="{{ $igLink }}" target="_blank" rel="noopener" class="btn btn-primary">
-                    <i class="ph ph-instagram-logo"></i> Follow @suddenlycreative.id
-                </a>
+                @if ($igLink)
+                    <a href="{{ $igLink }}" target="_blank" rel="noopener" class="btn btn-primary">
+                        <i class="ph ph-instagram-logo"></i> Follow {{ '@'.$settings->instagram_username }}
+                    </a>
+                @endif
             </div>
         </div>
     </section>
@@ -354,36 +357,54 @@
             </div>
 
             <div class="contact-grid">
-                <div class="contact-card reveal">
-                    <div class="icon-box"><i class="ph ph-map-pin"></i></div>
-                    <div>
-                        <h3>Alamat Studio</h3>
-                        <p>Jalan Antakarya No. 01, 40286, Bandung, Jawa Barat</p>
+                @if ($settings->address)
+                    <div class="contact-card reveal">
+                        <div class="icon-box"><i class="ph ph-map-pin"></i></div>
+                        <div>
+                            <h3>Alamat Studio</h3>
+                            <p>{{ $settings->address }}</p>
+                        </div>
                     </div>
-                </div>
+                @endif
 
-                <div class="contact-card reveal">
-                    <div class="icon-box"><i class="ph ph-whatsapp-logo"></i></div>
-                    <div>
-                        <h3>WhatsApp</h3>
-                        <a class="link" href="{{ $waLink }}" target="_blank" rel="noopener">0851-7211-0725</a>
+                @if ($settings->phone)
+                    <div class="contact-card reveal">
+                        <div class="icon-box"><i class="ph ph-whatsapp-logo"></i></div>
+                        <div>
+                            <h3>WhatsApp</h3>
+                            <a class="link" href="{{ $waLink }}" target="_blank" rel="noopener">{{ $settings->phone }}</a>
+                        </div>
                     </div>
-                </div>
+                @endif
 
-                <div class="contact-card reveal">
-                    <div class="icon-box"><i class="ph ph-instagram-logo"></i></div>
-                    <div>
-                        <h3>Instagram</h3>
-                        <a class="link" href="{{ $igLink }}" target="_blank" rel="noopener">@suddenlycreative.id</a>
+                @if ($settings->email)
+                    <div class="contact-card reveal">
+                        <div class="icon-box"><i class="ph ph-envelope-simple"></i></div>
+                        <div>
+                            <h3>Email</h3>
+                            <a class="link" href="mailto:{{ $settings->email }}">{{ $settings->email }}</a>
+                        </div>
                     </div>
-                </div>
+                @endif
+
+                @if ($settings->instagram_username)
+                    <div class="contact-card reveal">
+                        <div class="icon-box"><i class="ph ph-instagram-logo"></i></div>
+                        <div>
+                            <h3>Instagram</h3>
+                            <a class="link" href="{{ $igLink }}" target="_blank" rel="noopener">{{ '@'.$settings->instagram_username }}</a>
+                        </div>
+                    </div>
+                @endif
             </div>
 
-            <div class="contact-cta reveal">
-                <a href="{{ $waLink }}" target="_blank" rel="noopener" class="btn btn-primary">
-                    <i class="ph ph-chat-circle-dots"></i> Chat via WhatsApp
-                </a>
-            </div>
+            @if ($waLink)
+                <div class="contact-cta reveal">
+                    <a href="{{ $waLink }}" target="_blank" rel="noopener" class="btn btn-primary">
+                        <i class="ph ph-chat-circle-dots"></i> Chat via WhatsApp
+                    </a>
+                </div>
+            @endif
         </div>
     </section>
 
@@ -412,13 +433,24 @@
                         </div>
 
                         <div class="footer-meta">
-                            <span><i class="ph ph-map-pin"></i> Jalan Antakarya No. 01, 40286, Bandung, Jawa Barat</span>
-                            <span><i class="ph ph-whatsapp-logo"></i> 0851-7211-0725</span>
+                            @if ($settings->address)
+                                <span><i class="ph ph-map-pin"></i> {{ $settings->address }}</span>
+                            @endif
+                            @if ($settings->phone)
+                                <span><i class="ph ph-whatsapp-logo"></i> {{ $settings->phone }}</span>
+                            @endif
+                            @if ($settings->email)
+                                <span><i class="ph ph-envelope-simple"></i> {{ $settings->email }}</span>
+                            @endif
                         </div>
 
                         <div class="footer-social">
-                            <a href="{{ $igLink }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
-                            <a href="{{ $waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
+                            @if ($igLink)
+                                <a href="{{ $igLink }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+                            @endif
+                            @if ($waLink)
+                                <a href="{{ $waLink }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="ph ph-whatsapp-logo"></i></a>
+                            @endif
                         </div>
                     </div>
 

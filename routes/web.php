@@ -4,15 +4,18 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Models\Client;
 use App\Models\Event;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $events = Event::published()->ordered()->with('media')->get();
     $clients = Client::ordered()->get();
+    $settings = SiteSetting::current();
 
-    return view('landing', compact('events', 'clients'));
+    return view('landing', compact('events', 'clients', 'settings'));
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -35,6 +38,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
         Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
         Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
+
+        Route::get('/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [SiteSettingController::class, 'update'])->name('settings.update');
 
         Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
