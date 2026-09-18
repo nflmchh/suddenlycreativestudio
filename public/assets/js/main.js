@@ -224,6 +224,10 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.addEventListener("click", function () {
         var src = btn.getAttribute("data-video-src");
         var posterImg = btn.querySelector("img");
+
+        var wrapper = document.createElement("div");
+        wrapper.className = "gallery-item gallery-video-playing";
+
         var video = document.createElement("video");
         video.src = src;
         if (posterImg) {
@@ -235,7 +239,19 @@ document.addEventListener("DOMContentLoaded", function () {
         video.setAttribute("controlsList", "nodownload noremoteplayback");
         video.setAttribute("disablePictureInPicture", "");
         video.setAttribute("oncontextmenu", "return false;");
-        btn.replaceWith(video);
+
+        var watermark = document.createElement("div");
+        watermark.className = "video-watermark";
+        watermark.setAttribute("aria-hidden", "true");
+        for (var i = 0; i < 6; i++) {
+          var span = document.createElement("span");
+          span.textContent = "SUDDENLY CREATIVE";
+          watermark.appendChild(span);
+        }
+
+        wrapper.appendChild(video);
+        wrapper.appendChild(watermark);
+        btn.replaceWith(wrapper);
       });
     });
   };
