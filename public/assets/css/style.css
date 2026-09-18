@@ -375,17 +375,20 @@ ul {
 
 .section-boundary-decor {
   position: relative;
-  height: clamp(90px, 16vw, 190px);
+  height: clamp(60px, 8vw, 110px);
   z-index: 5;
   pointer-events: none;
 }
 
 .section-boundary-decor img {
   position: absolute;
-  left: clamp(16px, 5vw, 56px);
+  left: clamp(28px, 9vw, 110px);
   top: 50%;
   transform: translateY(-50%);
-  height: 100%;
+  /* Tied to the container's own height (not an independent clamp) so the
+     overflow above/below stays a fixed, safe 18px at every viewport width —
+     the sections on either side only have 24px of padding to spare there. */
+  height: calc(clamp(60px, 8vw, 110px) + 36px);
   width: auto;
 }
 #portfolio {
