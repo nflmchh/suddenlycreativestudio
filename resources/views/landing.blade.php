@@ -479,7 +479,7 @@
                 <span class="title">Suci — Asisten Suddenly Creative</span>
             </div>
             <div class="suci-messages" id="suciMessages"></div>
-            <form class="suci-input-row" id="suciForm" data-chat-url="{{ route('chat.send') }}">
+            <form class="suci-input-row" id="suciForm" data-chat-url="{{ route('chat.send') }}" data-lead-url="{{ route('chat.lead') }}" data-wa-phone="{{ $settings->phone }}" data-wa-link="{{ $waLink }}">
                 <input type="text" id="suciInput" placeholder="Tulis pertanyaan kamu..." autocomplete="off" maxlength="1000">
                 <button type="submit" aria-label="Kirim"><i class="ph-fill ph-paper-plane-tilt"></i></button>
             </form>

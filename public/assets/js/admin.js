@@ -1,4 +1,113 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Push notifications — lets the admin (using "Add to Home Screen" on
+  // Safari/iOS) get notified on their phone whenever Suci captures a lead.
+  var pushBtn = document.getElementById("pushToggleBtn");
+  var pushBanner = document.getElementById("pushStatusBanner");
+
+  function showPushBanner(message) {
+    if (!pushBanner) return;
+    pushBanner.textContent = message;
+    pushBanner.style.display = "block";
+  }
+
+  function urlBase64ToUint8Array(base64String) {
+    var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    var base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+    for (var i = 0; i < rawData.length; i++) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  if (pushBtn && "serviceWorker" in navigator && "PushManager" in window) {
+    var subscribeUrl = pushBtn.getAttribute("data-subscribe-url");
+    var unsubscribeUrl = pushBtn.getAttribute("data-unsubscribe-url");
+    var publicKeyUrl = pushBtn.getAttribute("data-public-key-url");
+    var csrfToken = document.querySelector('meta[name="csrf-token"]');
+
+    function setButtonState(isSubscribed) {
+      pushBtn.innerHTML = isSubscribed
+        ? '<i class="ph-fill ph-bell-ringing"></i> Notifikasi Aktif'
+        : '<i class="ph ph-bell"></i> Aktifkan Notifikasi';
+      pushBtn.dataset.subscribed = isSubscribed ? "1" : "0";
+    }
+
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(function (registration) {
+        return registration.pushManager.getSubscription().then(function (sub) {
+          setButtonState(!!sub);
+        });
+      })
+      .catch(function () {
+        /* service worker registration failed — button stays in default state */
+      });
+
+    pushBtn.addEventListener("click", function () {
+      if (pushBtn.dataset.subscribed === "1") {
+        navigator.serviceWorker.ready.then(function (registration) {
+          registration.pushManager.getSubscription().then(function (sub) {
+            if (!sub) return;
+            var endpoint = sub.endpoint;
+            sub.unsubscribe().then(function () {
+              fetch(unsubscribeUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": csrfToken ? csrfToken.getAttribute("content") : "" },
+                body: JSON.stringify({ endpoint: endpoint }),
+              }).finally(function () {
+                setButtonState(false);
+                showPushBanner("Notifikasi dimatikan di perangkat ini.");
+              });
+            });
+          });
+        });
+        return;
+      }
+
+      Notification.requestPermission().then(function (permission) {
+        if (permission !== "granted") {
+          showPushBanner("Izin notifikasi ditolak. Aktifkan lewat pengaturan browser/HP kalau berubah pikiran.");
+          return;
+        }
+
+        fetch(publicKeyUrl)
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (data) {
+            if (!data.publicKey) {
+              showPushBanner("Notifikasi belum dikonfigurasi di server (VAPID key belum diisi).");
+              return;
+            }
+            return navigator.serviceWorker.ready.then(function (registration) {
+              return registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array(data.publicKey),
+              });
+            });
+          })
+          .then(function (subscription) {
+            if (!subscription) return;
+            return fetch(subscribeUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": csrfToken ? csrfToken.getAttribute("content") : "" },
+              body: JSON.stringify(subscription.toJSON()),
+            }).then(function () {
+              setButtonState(true);
+              showPushBanner("Notifikasi aktif di perangkat ini — kamu akan dapat notif kalau ada lead baru dari Suci.");
+            });
+          })
+          .catch(function () {
+            showPushBanner("Gagal mengaktifkan notifikasi. Pastikan situs ini sudah di-“Add to Home Screen” dan dibuka dari sana (khusus iPhone/Safari).");
+          });
+      });
+    });
+  } else if (pushBtn) {
+    pushBtn.style.display = "none";
+  }
+
   // Show the "Demo URL" field only for Web & Apps Development events —
   // it's not relevant for visual/event categories.
   var categorySelect = document.getElementById("category");

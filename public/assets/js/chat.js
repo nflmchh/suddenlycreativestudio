@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var STORAGE_KEY = "suci_chat_history";
   var chatUrl = form.getAttribute("data-chat-url");
+  var leadUrl = form.getAttribute("data-lead-url");
+  var waPhone = form.getAttribute("data-wa-phone") || "";
+  var waLink = form.getAttribute("data-wa-link") || "";
   var isOpen = false;
   var isSending = false;
   var history = [];
@@ -34,10 +37,36 @@ document.addEventListener("DOMContentLoaded", function () {
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }
 
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  // Suci mentions the studio's own WhatsApp number verbatim (it's given to
+  // her in the system prompt), so a plain substring swap on the escaped
+  // text is enough to turn it into a tappable wa.me link — no need for a
+  // fragile generic phone-number regex.
+  function linkifyAssistantText(text) {
+    var escaped = escapeHtml(text);
+    if (waPhone && waLink) {
+      var escapedPhone = escapeHtml(waPhone);
+      if (escapedPhone && escaped.indexOf(escapedPhone) !== -1) {
+        var anchor = '<a href="' + waLink + '" target="_blank" rel="noopener">' + escapedPhone + "</a>";
+        escaped = escaped.split(escapedPhone).join(anchor);
+      }
+    }
+    return escaped;
+  }
+
   function appendBubble(role, text) {
     var bubble = document.createElement("div");
     bubble.className = "suci-bubble suci-bubble-" + role;
-    bubble.textContent = text;
+    if (role === "assistant") {
+      bubble.innerHTML = linkifyAssistantText(text);
+    } else {
+      bubble.textContent = text;
+    }
     messagesEl.appendChild(bubble);
     scrollToBottom();
     return bubble;
@@ -50,6 +79,134 @@ document.addEventListener("DOMContentLoaded", function () {
     messagesEl.appendChild(typing);
     scrollToBottom();
     return typing;
+  }
+
+  // Offered when Suci judges the visitor is serious enough to hand off to
+  // the internal team — a real choice, not more freeform LLM text, so it's
+  // rendered as actual buttons rather than parsed from a reply.
+  function appendHandoffOffer() {
+    var card = document.createElement("div");
+    card.className = "suci-action-card";
+
+    var question = document.createElement("p");
+    question.className = "suci-action-question";
+    question.textContent = "Apakah berkenan disambungkan ke tim internal kami?";
+    card.appendChild(question);
+
+    var btnRow = document.createElement("div");
+    btnRow.className = "suci-action-buttons";
+
+    var yesBtn = document.createElement("button");
+    yesBtn.type = "button";
+    yesBtn.className = "suci-action-btn suci-action-yes";
+    yesBtn.textContent = "Boleh";
+
+    var noBtn = document.createElement("button");
+    noBtn.type = "button";
+    noBtn.className = "suci-action-btn suci-action-no";
+    noBtn.textContent = "Belum";
+
+    btnRow.appendChild(yesBtn);
+    btnRow.appendChild(noBtn);
+    card.appendChild(btnRow);
+    messagesEl.appendChild(card);
+    scrollToBottom();
+
+    yesBtn.addEventListener("click", function () {
+      card.remove();
+      appendLeadForm();
+    });
+
+    noBtn.addEventListener("click", function () {
+      card.remove();
+      appendBubble("assistant", "Oke, no problem! Lanjut aja kalau ada pertanyaan lain ya 😊");
+    });
+  }
+
+  function appendLeadForm() {
+    if (!leadUrl) return;
+
+    var card = document.createElement("div");
+    card.className = "suci-action-card";
+
+    var label = document.createElement("p");
+    label.className = "suci-action-question";
+    label.textContent = "Boleh tau dengan siapa saya bicara, dan nomor WhatsApp yang bisa dihubungi?";
+    card.appendChild(label);
+
+    var nameInput = document.createElement("input");
+    nameInput.type = "text";
+    nameInput.placeholder = "Nama kamu";
+    nameInput.className = "suci-action-input";
+    nameInput.maxLength = 255;
+
+    var waInput = document.createElement("input");
+    waInput.type = "tel";
+    waInput.placeholder = "Nomor WhatsApp";
+    waInput.className = "suci-action-input";
+    waInput.maxLength = 50;
+
+    var errorEl = document.createElement("p");
+    errorEl.className = "suci-action-error";
+    errorEl.style.display = "none";
+
+    var submitBtn = document.createElement("button");
+    submitBtn.type = "button";
+    submitBtn.className = "suci-action-btn suci-action-yes";
+    submitBtn.textContent = "Kirim";
+
+    card.appendChild(nameInput);
+    card.appendChild(waInput);
+    card.appendChild(errorEl);
+    card.appendChild(submitBtn);
+    messagesEl.appendChild(card);
+    scrollToBottom();
+    nameInput.focus();
+
+    var submit = function () {
+      var name = nameInput.value.trim();
+      var wa = waInput.value.trim();
+
+      if (!name || !wa) {
+        errorEl.textContent = "Nama dan nomor WhatsApp wajib diisi ya.";
+        errorEl.style.display = "block";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Mengirim...";
+      errorEl.style.display = "none";
+
+      var token = document.querySelector('meta[name="csrf-token"]');
+      fetch(leadUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token ? token.getAttribute("content") : "",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ name: name, whatsapp: wa }),
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("failed");
+          return res.json();
+        })
+        .then(function () {
+          card.remove();
+          appendBubble("assistant", "Sip, makasih " + name + "! Tim kami bakal segera hubungi kamu ya 🤝");
+        })
+        .catch(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Kirim";
+          errorEl.textContent = "Gagal mengirim, coba lagi ya.";
+          errorEl.style.display = "block";
+        });
+    };
+
+    submitBtn.addEventListener("click", submit);
+    waInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") submit();
+    });
   }
 
   function renderHistory() {
@@ -127,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var minDelay = 900 + Math.random() * 1300;
     var token = document.querySelector('meta[name="csrf-token"]');
 
-    var finishWith = function (reply) {
+    var finishWith = function (reply, offerHandoff) {
       var elapsed = Date.now() - startedAt;
       var wait = Math.max(0, minDelay - elapsed);
       window.setTimeout(function () {
@@ -136,6 +293,9 @@ document.addEventListener("DOMContentLoaded", function () {
         history.push({ role: "assistant", content: reply });
         saveHistory();
         isSending = false;
+        if (offerHandoff) {
+          appendHandoffOffer();
+        }
       }, wait);
     };
 
@@ -155,10 +315,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return res.json();
       })
       .then(function (data) {
-        finishWith((data && data.reply) || "Maaf, boleh diulang pertanyaannya?");
+        finishWith((data && data.reply) || "Maaf, boleh diulang pertanyaannya?", data && data.offer_handoff);
       })
       .catch(function () {
-        finishWith("Maaf, koneksi lagi terganggu. Coba lagi sebentar, atau chat kami langsung lewat WhatsApp.");
+        finishWith("Maaf, koneksi lagi terganggu. Coba lagi sebentar, atau chat kami langsung lewat WhatsApp.", false);
       });
   });
 });

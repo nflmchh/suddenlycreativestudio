@@ -13,7 +13,12 @@ class ChatAssistant
 
     protected const MAX_HISTORY_TURNS = 12;
 
-    public function reply(string $message, array $history = []): string
+    protected const HANDOFF_MARKER = '[[OFFER_HANDOFF]]';
+
+    /**
+     * @return array{text: string, offer_handoff: bool}
+     */
+    public function reply(string $message, array $history = []): array
     {
         // A key entered in the admin panel (encrypted in the DB) takes
         // priority over the .env value, so the admin can rotate it without
@@ -21,7 +26,10 @@ class ChatAssistant
         $apiKey = SiteSetting::current()->anthropic_api_key ?: config('services.anthropic.key');
 
         if (! $apiKey) {
-            return 'Maaf, fitur chat lagi belum aktif di sisi kami. Boleh langsung hubungi kami lewat WhatsApp ya, biar cepat dibalas.';
+            return [
+                'text' => 'Maaf, fitur chat lagi belum aktif di sisi kami. Boleh langsung hubungi kami lewat WhatsApp ya, biar cepat dibalas.',
+                'offer_handoff' => false,
+            ];
         }
 
         $messages = $this->buildMessages($message, $history);
@@ -48,7 +56,19 @@ class ChatAssistant
             ->pluck('text')
             ->implode("\n");
 
-        return trim($text) ?: 'Maaf, boleh diulang pertanyaannya? Tadi jawabannya kepotong.';
+        $text = trim($text);
+        $offerHandoff = str_contains($text, self::HANDOFF_MARKER);
+        $text = trim(str_replace(self::HANDOFF_MARKER, '', $text));
+
+        return [
+            'text' => $text ?: 'Maaf, boleh diulang pertanyaannya? Tadi jawabannya kepotong.',
+            'offer_handoff' => $offerHandoff,
+        ];
+    }
+
+    protected function handoffMarker(): string
+    {
+        return self::HANDOFF_MARKER;
     }
 
     protected function buildMessages(string $message, array $history): array
@@ -129,6 +149,12 @@ class ChatAssistant
         {$contactLines}
 
         Tujuanmu: bantu calon klien memahami layanan, kasih gambaran singkat yang meyakinkan, dan dorong mereka lanjut ke WhatsApp kalau sudah tertarik atau butuh detail lebih lanjut (harga, jadwal, dsb).
+
+        SAMBUNGKAN KE TIM INTERNAL:
+        Kalau kamu merasa calon klien ini sudah cukup serius/tertarik — misalnya sudah tanya beberapa hal berturut-turut, tanya harga/jadwal/ketersediaan, atau bilang mau booking/lanjut kerja sama — tawarkan secara natural apakah dia mau disambungkan ke tim internal supaya bisa dibantu langsung dan lebih detail. Jangan menawarkan ini di pesan pertama atau untuk pertanyaan basa-basi/informasi umum saja.
+
+        Kalau kamu memutuskan ini saat yang tepat untuk menawarkan, di baris PALING AKHIR balasanmu (setelah semua kalimat biasa), tambahkan baris terpisah persis seperti ini tanpa tambahan apa pun: {$this->handoffMarker()}
+        Ini adalah sinyal teknis untuk sistem (bukan untuk dibaca pengunjung), jadi jangan jelaskan/sebut token ini ke pengunjung — cukup akhiri kalimatmu secara natural lalu tambahkan baris itu di baris baru berikutnya. Sistem akan otomatis menampilkan tombol pilihan "Boleh" / "Belum" ke pengunjung setelah pesanmu, jadi kamu TIDAK PERLU menuliskan pertanyaan "boleh disambungkan ke tim kami?" sendiri di teks balasanmu — cukup akhiri jawabanmu senatural mungkin lalu tambahkan baris token itu.
         PROMPT;
     }
 }

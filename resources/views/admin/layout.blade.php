@@ -21,11 +21,15 @@
             <a href="{{ route('admin.dashboard') }}">Events</a>
             <a href="{{ route('admin.events.create') }}">Tambah Event</a>
             <a href="{{ route('admin.clients.index') }}">Clients</a>
+            <a href="{{ route('admin.leads.index') }}">Leads</a>
             <a href="{{ route('admin.stats.index') }}">Statistik</a>
             <a href="{{ route('admin.conversations.index') }}">Percakapan Suci</a>
             <a href="{{ route('admin.settings.edit') }}">Kontak</a>
             <a href="{{ route('admin.password.edit') }}">Ganti Password</a>
             <a href="{{ url('/') }}" target="_blank">Lihat Situs</a>
+            <button type="button" id="pushToggleBtn" class="btn-glass btn-sm" data-subscribe-url="{{ route('admin.push.subscribe') }}" data-unsubscribe-url="{{ route('admin.push.unsubscribe') }}" data-public-key-url="{{ route('admin.push.public-key') }}">
+                <i class="ph ph-bell"></i> Notifikasi
+            </button>
             <form method="POST" action="{{ route('admin.logout') }}" style="display:inline;">
                 @csrf
                 <button type="submit">Logout</button>
@@ -37,6 +41,8 @@
         @if (session('status'))
             <div class="admin-status">{{ session('status') }}</div>
         @endif
+
+        <div id="pushStatusBanner" class="admin-status" style="display:none;"></div>
 
         @if ($errors->any())
             <div class="admin-errors">

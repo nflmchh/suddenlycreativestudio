@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ChatConversationController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\PasswordController;
+use App\Http\Controllers\Admin\PushSubscriptionController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\ChatController;
@@ -23,6 +25,7 @@ Route::get('/', function () {
 })->middleware(TrackPageView::class);
 
 Route::post('/chat', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
+Route::post('/chat/lead', [ChatController::class, 'lead'])->middleware('throttle:10,1')->name('chat.lead');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -52,6 +55,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/conversations', [ChatConversationController::class, 'index'])->name('conversations.index');
         Route::get('/conversations/{conversation}', [ChatConversationController::class, 'show'])->name('conversations.show');
+
+        Route::get('/leads', [LeadController::class, 'index'])->name('leads.index');
+
+        Route::get('/push/public-key', [PushSubscriptionController::class, 'publicKey'])->name('push.public-key');
+        Route::post('/push/subscribe', [PushSubscriptionController::class, 'store'])->name('push.subscribe');
+        Route::post('/push/unsubscribe', [PushSubscriptionController::class, 'destroy'])->name('push.unsubscribe');
 
         Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');

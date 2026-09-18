@@ -173,6 +173,77 @@
   background: var(--y2k-pink);
 }
 
+.suci-bubble-assistant a {
+  color: var(--y2k-ink);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.suci-action-card {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+
+.suci-action-question {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.suci-action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.suci-action-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #fff;
+}
+
+.suci-action-yes {
+  background: var(--y2k-mint);
+}
+
+.suci-action-yes:hover {
+  background: var(--y2k-lemon);
+}
+
+.suci-action-no:hover {
+  background: var(--y2k-panel);
+}
+
+.suci-action-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.suci-action-input {
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.suci-action-error {
+  color: #d21b3c;
+  font-size: 12px;
+  margin: 0;
+}
+
 @media (max-width: 480px) {
   .suci-widget {
     right: 14px;
