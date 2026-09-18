@@ -56,7 +56,7 @@ class ChatController extends Controller
         ]);
 
         $notifier->notifyAdmins(
-            'Lead baru dari Suci 🎉',
+            'Lead baru dari Yorii 🎉',
             "{$lead->name} — {$lead->whatsapp} minta disambungkan ke tim.",
             route('admin.leads.index')
         );

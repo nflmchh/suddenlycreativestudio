@@ -464,23 +464,23 @@
         </div>
     </footer>
 
-    <div class="suci-widget" id="suciWidget">
-        <button type="button" class="suci-launcher" id="suciLauncher" aria-label="Chat dengan Suci">
+    <div class="yorii-widget" id="yoriiWidget">
+        <button type="button" class="yorii-launcher" id="yoriiLauncher" aria-label="Chat dengan Yorii">
             <img src="{{ asset('assets/img/logo-icon.png') }}" alt="">
-            <span class="suci-launcher-badge" id="suciLauncherBadge" aria-hidden="true"></span>
+            <span class="yorii-launcher-badge" id="yoriiLauncherBadge" aria-hidden="true"></span>
         </button>
 
-        <div class="suci-panel" id="suciPanel" aria-hidden="true">
+        <div class="yorii-panel" id="yoriiPanel" aria-hidden="true">
             <div class="window-bar">
                 <div class="traffic-lights">
-                    <span class="red" id="suciClose" role="button" tabindex="0" aria-label="Tutup"></span>
+                    <span class="red" id="yoriiClose" role="button" tabindex="0" aria-label="Tutup"></span>
                     <span class="yellow"></span><span class="green"></span>
                 </div>
-                <span class="title">Suci — Asisten Suddenly Creative</span>
+                <span class="title">Yorii — Asisten Suddenly Creative</span>
             </div>
-            <div class="suci-messages" id="suciMessages"></div>
-            <form class="suci-input-row" id="suciForm" data-chat-url="{{ route('chat.send') }}" data-lead-url="{{ route('chat.lead') }}" data-wa-phone="{{ $settings->phone }}" data-wa-link="{{ $waLink }}">
-                <input type="text" id="suciInput" placeholder="Tulis pertanyaan kamu..." autocomplete="off" maxlength="1000">
+            <div class="yorii-messages" id="yoriiMessages"></div>
+            <form class="yorii-input-row" id="yoriiForm" data-chat-url="{{ route('chat.send') }}" data-lead-url="{{ route('chat.lead') }}" data-wa-phone="{{ $settings->phone }}" data-wa-link="{{ $waLink }}">
+                <input type="text" id="yoriiInput" placeholder="Tulis pertanyaan kamu..." autocomplete="off" maxlength="1000">
                 <button type="submit" aria-label="Kirim"><i class="ph-fill ph-paper-plane-tilt"></i></button>
             </form>
         </div>

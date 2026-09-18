@@ -46,10 +46,10 @@
                 <div class="traffic-lights">
                     <span class="red"></span><span class="yellow"></span><span class="green"></span>
                 </div>
-                <span class="title">Suci — Asisten Chat AI</span>
+                <span class="title">Yorii — Asisten Chat AI</span>
             </div>
             <div class="admin-card-body">
-                <p class="hint">API key Anthropic (Claude) supaya Suci bisa menjawab pertanyaan pengunjung secara otomatis di website.</p>
+                <p class="hint">API key Anthropic (Claude) supaya Yorii bisa menjawab pertanyaan pengunjung secara otomatis di website.</p>
 
                 <div class="field">
                     <label for="anthropic_api_key">API Key Anthropic</label>
@@ -60,7 +60,7 @@
                 @if ($setting->anthropic_api_key)
                     <div class="field field-checkbox">
                         <input type="checkbox" id="clear_api_key" name="clear_api_key" value="1">
-                        <label for="clear_api_key" style="margin:0;">Hapus API key (nonaktifkan chat Suci)</label>
+                        <label for="clear_api_key" style="margin:0;">Hapus API key (nonaktifkan chat Yorii)</label>
                     </div>
                 @endif
             </div>

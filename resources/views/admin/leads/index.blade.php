@@ -8,10 +8,10 @@
             <div class="traffic-lights">
                 <span class="red"></span><span class="yellow"></span><span class="green"></span>
             </div>
-            <span class="title">Leads dari Suci</span>
+            <span class="title">Leads dari Yorii</span>
         </div>
         <div class="admin-card-body">
-            <p class="hint">Pengunjung yang minta disambungkan ke tim internal lewat chat Suci. Kalau notifikasi aktif, kamu dapat notif tiap ada yang baru masuk.</p>
+            <p class="hint">Pengunjung yang minta disambungkan ke tim internal lewat chat Yorii. Kalau notifikasi aktif, kamu dapat notif tiap ada yang baru masuk.</p>
 
             @if ($leads->isEmpty())
                 <p>Belum ada lead masuk.</p>

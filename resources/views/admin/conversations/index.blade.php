@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', 'Percakapan Suci')
+@section('title', 'Percakapan Yorii')
 
 @section('content')
     <div class="admin-card">
@@ -8,10 +8,10 @@
             <div class="traffic-lights">
                 <span class="red"></span><span class="yellow"></span><span class="green"></span>
             </div>
-            <span class="title">Percakapan Suci dengan Pengunjung</span>
+            <span class="title">Percakapan Yorii dengan Pengunjung</span>
         </div>
         <div class="admin-card-body">
-            <p class="hint">Daftar semua sesi chat antara pengunjung website dan Suci, diurutkan dari yang paling baru.</p>
+            <p class="hint">Daftar semua sesi chat antara pengunjung website dan Yorii, diurutkan dari yang paling baru.</p>
 
             @if ($conversations->isEmpty())
                 <p>Belum ada percakapan.</p>

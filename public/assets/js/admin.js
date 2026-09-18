@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Push notifications — lets the admin (using "Add to Home Screen" on
-  // Safari/iOS) get notified on their phone whenever Suci captures a lead.
+  // Safari/iOS) get notified on their phone whenever Yorii captures a lead.
   var pushBtn = document.getElementById("pushToggleBtn");
   var pushBanner = document.getElementById("pushStatusBanner");
 
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
               body: JSON.stringify(subscription.toJSON()),
             }).then(function () {
               setButtonState(true);
-              showPushBanner("Notifikasi aktif di perangkat ini — kamu akan dapat notif kalau ada lead baru dari Suci.");
+              showPushBanner("Notifikasi aktif di perangkat ini — kamu akan dapat notif kalau ada lead baru dari Yorii.");
             });
           })
           .catch(function () {

@@ -482,7 +482,7 @@ body.admin-body {
   border: var(--border-w) solid var(--y2k-ink);
 }
 
-.suci-bubble {
+.yorii-bubble {
   max-width: 70%;
   padding: 10px 14px;
   border-radius: var(--radius-md);
@@ -492,12 +492,12 @@ body.admin-body {
   white-space: pre-wrap;
 }
 
-.suci-bubble-assistant {
+.yorii-bubble-assistant {
   background: #fff;
   border-bottom-left-radius: 4px;
 }
 
-.suci-bubble-user {
+.yorii-bubble-user {
   background: var(--y2k-lemon);
   border-bottom-right-radius: 4px;
 }

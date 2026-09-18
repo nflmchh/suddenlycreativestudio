@@ -81,7 +81,7 @@
             <div class="traffic-lights">
                 <span class="red"></span><span class="yellow"></span><span class="green"></span>
             </div>
-            <span class="title">Suci — Chat Assistant</span>
+            <span class="title">Yorii — Chat Assistant</span>
         </div>
         <div class="admin-card-body">
             <div class="stat-grid">
@@ -94,7 +94,7 @@
                     <span class="stat-label">Percakapan Hari Ini</span>
                 </div>
             </div>
-            <p class="hint">Lihat isi percakapannya di menu <a href="{{ route('admin.conversations.index') }}">Percakapan Suci</a>.</p>
+            <p class="hint">Lihat isi percakapannya di menu <a href="{{ route('admin.conversations.index') }}">Percakapan Yorii</a>.</p>
         </div>
     </div>
 

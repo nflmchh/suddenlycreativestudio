@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var launcher = document.getElementById("suciLauncher");
-  var panel = document.getElementById("suciPanel");
-  var closeBtn = document.getElementById("suciClose");
-  var messagesEl = document.getElementById("suciMessages");
-  var form = document.getElementById("suciForm");
-  var input = document.getElementById("suciInput");
-  var badge = document.getElementById("suciLauncherBadge");
+  var launcher = document.getElementById("yoriiLauncher");
+  var panel = document.getElementById("yoriiPanel");
+  var closeBtn = document.getElementById("yoriiClose");
+  var messagesEl = document.getElementById("yoriiMessages");
+  var form = document.getElementById("yoriiForm");
+  var input = document.getElementById("yoriiInput");
+  var badge = document.getElementById("yoriiLauncherBadge");
 
   if (!launcher || !panel || !form || !input || !messagesEl) return;
 
-  var STORAGE_KEY = "suci_chat_history";
+  var STORAGE_KEY = "yorii_chat_history";
   var chatUrl = form.getAttribute("data-chat-url");
   var leadUrl = form.getAttribute("data-lead-url");
   var waPhone = form.getAttribute("data-wa-phone") || "";
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Suci mentions the studio's own WhatsApp number verbatim (it's given to
+  // Yorii mentions the studio's own WhatsApp number verbatim (it's given to
   // her in the system prompt), so a plain substring swap on the escaped
   // text is enough to turn it into a tappable wa.me link — no need for a
   // fragile generic phone-number regex.
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function appendBubble(role, text) {
     var bubble = document.createElement("div");
-    bubble.className = "suci-bubble suci-bubble-" + role;
+    bubble.className = "yorii-bubble yorii-bubble-" + role;
     if (role === "assistant") {
       bubble.innerHTML = linkifyAssistantText(text);
     } else {
@@ -74,36 +74,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showTyping() {
     var typing = document.createElement("div");
-    typing.className = "suci-bubble suci-bubble-assistant suci-typing";
+    typing.className = "yorii-bubble yorii-bubble-assistant yorii-typing";
     typing.innerHTML = "<span></span><span></span><span></span>";
     messagesEl.appendChild(typing);
     scrollToBottom();
     return typing;
   }
 
-  // Offered when Suci judges the visitor is serious enough to hand off to
+  // Offered when Yorii judges the visitor is serious enough to hand off to
   // the internal team — a real choice, not more freeform LLM text, so it's
   // rendered as actual buttons rather than parsed from a reply.
   function appendHandoffOffer() {
     var card = document.createElement("div");
-    card.className = "suci-action-card";
+    card.className = "yorii-action-card";
 
     var question = document.createElement("p");
-    question.className = "suci-action-question";
+    question.className = "yorii-action-question";
     question.textContent = "Apakah berkenan disambungkan ke tim internal kami?";
     card.appendChild(question);
 
     var btnRow = document.createElement("div");
-    btnRow.className = "suci-action-buttons";
+    btnRow.className = "yorii-action-buttons";
 
     var yesBtn = document.createElement("button");
     yesBtn.type = "button";
-    yesBtn.className = "suci-action-btn suci-action-yes";
+    yesBtn.className = "yorii-action-btn yorii-action-yes";
     yesBtn.textContent = "Boleh";
 
     var noBtn = document.createElement("button");
     noBtn.type = "button";
-    noBtn.className = "suci-action-btn suci-action-no";
+    noBtn.className = "yorii-action-btn yorii-action-no";
     noBtn.textContent = "Belum";
 
     btnRow.appendChild(yesBtn);
@@ -127,32 +127,32 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!leadUrl) return;
 
     var card = document.createElement("div");
-    card.className = "suci-action-card";
+    card.className = "yorii-action-card";
 
     var label = document.createElement("p");
-    label.className = "suci-action-question";
+    label.className = "yorii-action-question";
     label.textContent = "Boleh tau dengan siapa saya bicara, dan nomor WhatsApp yang bisa dihubungi?";
     card.appendChild(label);
 
     var nameInput = document.createElement("input");
     nameInput.type = "text";
     nameInput.placeholder = "Nama kamu";
-    nameInput.className = "suci-action-input";
+    nameInput.className = "yorii-action-input";
     nameInput.maxLength = 255;
 
     var waInput = document.createElement("input");
     waInput.type = "tel";
     waInput.placeholder = "Nomor WhatsApp";
-    waInput.className = "suci-action-input";
+    waInput.className = "yorii-action-input";
     waInput.maxLength = 50;
 
     var errorEl = document.createElement("p");
-    errorEl.className = "suci-action-error";
+    errorEl.className = "yorii-action-error";
     errorEl.style.display = "none";
 
     var submitBtn = document.createElement("button");
     submitBtn.type = "button";
-    submitBtn.className = "suci-action-btn suci-action-yes";
+    submitBtn.className = "yorii-action-btn yorii-action-yes";
     submitBtn.textContent = "Kirim";
 
     card.appendChild(nameInput);
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (history.length === 0) {
       appendBubble(
         "assistant",
-        "Hai! Aku Suci dari Suddenly Creative Studio 👋 Ada yang bisa aku bantu soal visual production, motion design, 3D, event, atau website & apps?"
+        "Hai! Aku Yorii dari Suddenly Creative Studio 👋 Ada yang bisa aku bantu soal visual production, motion design, 3D, event, atau website & apps?"
       );
     } else {
       history.forEach(function (turn) {

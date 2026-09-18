@@ -18,7 +18,7 @@
 
             <div class="conversation-thread">
                 @forelse ($conversation->messages as $message)
-                    <div class="suci-bubble suci-bubble-{{ $message->role }}" style="align-self:{{ $message->role === 'user' ? 'flex-end' : 'flex-start' }};">
+                    <div class="yorii-bubble yorii-bubble-{{ $message->role }}" style="align-self:{{ $message->role === 'user' ? 'flex-end' : 'flex-start' }};">
                         {{ $message->content }}
                     </div>
                 @empty

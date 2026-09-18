@@ -28,7 +28,7 @@
             <a href="{{ route('admin.clients.index') }}">Clients</a>
             <a href="{{ route('admin.leads.index') }}">Leads</a>
             <a href="{{ route('admin.stats.index') }}">Statistik</a>
-            <a href="{{ route('admin.conversations.index') }}">Percakapan Suci</a>
+            <a href="{{ route('admin.conversations.index') }}">Percakapan Yorii</a>
             <a href="{{ route('admin.settings.edit') }}">Kontak</a>
             <a href="{{ route('admin.password.edit') }}">Ganti Password</a>
             <a href="{{ url('/') }}" target="_blank">Lihat Situs</a>
