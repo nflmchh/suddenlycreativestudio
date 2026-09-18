@@ -335,3 +335,83 @@ body.admin-body {
   margin-top: 2px;
   max-width: 100%;
 }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-md);
+  background: var(--y2k-panel);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--y2k-ink);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--y2k-ink-muted);
+  font-weight: 600;
+}
+
+.chart-wrap {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.bar-chart {
+  width: 100%;
+  max-width: 760px;
+  height: auto;
+  display: block;
+}
+
+.bar-chart rect {
+  transition: opacity 0.1s ease;
+}
+
+.bar-chart rect:hover {
+  opacity: 0.75;
+}
+
+.conversation-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--y2k-panel);
+  border-radius: var(--radius-md);
+  border: var(--border-w) solid var(--y2k-ink);
+}
+
+.suci-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: var(--border-w) solid var(--y2k-ink);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.suci-bubble-assistant {
+  background: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+.suci-bubble-user {
+  background: var(--y2k-lemon);
+  border-bottom-right-radius: 4px;
+}

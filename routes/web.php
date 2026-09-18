@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ChatConversationController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\StatsController;
 use App\Http\Controllers\ChatController;
+use App\Http\Middleware\TrackPageView;
 use App\Models\Client;
 use App\Models\Event;
 use App\Models\SiteSetting;
@@ -17,7 +20,7 @@ Route::get('/', function () {
     $settings = SiteSetting::current();
 
     return view('landing', compact('events', 'clients', 'settings'));
-});
+})->middleware(TrackPageView::class);
 
 Route::post('/chat', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
 
@@ -44,6 +47,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [SiteSettingController::class, 'update'])->name('settings.update');
+
+        Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');
+
+        Route::get('/conversations', [ChatConversationController::class, 'index'])->name('conversations.index');
+        Route::get('/conversations/{conversation}', [ChatConversationController::class, 'show'])->name('conversations.show');
 
         Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');

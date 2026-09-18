@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatConversation;
 use App\Services\ChatAssistant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,15 +18,18 @@ class ChatController extends Controller
             'history.*.content' => ['required_with:history', 'string', 'max:1000'],
         ]);
 
+        $conversation = ChatConversation::forSession($request->session()->getId());
+        $conversation->messages()->create(['role' => 'user', 'content' => $data['message']]);
+
         try {
             $reply = $assistant->reply($data['message'], $data['history'] ?? []);
         } catch (\Throwable $e) {
             Log::error('Chat assistant failed: '.$e->getMessage());
-
-            return response()->json([
-                'reply' => 'Maaf, lagi ada gangguan koneksi di sini. Coba lagi sebentar ya, atau langsung chat WhatsApp kami.',
-            ], 200);
+            $reply = 'Maaf, lagi ada gangguan koneksi di sini. Coba lagi sebentar ya, atau langsung chat WhatsApp kami.';
         }
+
+        $conversation->messages()->create(['role' => 'assistant', 'content' => $reply]);
+        $conversation->touch();
 
         return response()->json(['reply' => $reply]);
     }
