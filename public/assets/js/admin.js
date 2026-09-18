@@ -164,7 +164,18 @@ document.addEventListener("DOMContentLoaded", function () {
     var videoFiles = videoInput ? Array.prototype.slice.call(videoInput.files) : [];
     var imageFiles = imageInput ? Array.prototype.slice.call(imageInput.files) : [];
 
-    var posterPromise = Promise.all(videoFiles.map(capturePosterFrame));
+    // Capture posters one at a time — doing all of them in parallel makes
+    // the browser decode many videos at once and several silently time out.
+    var posterPromise = videoFiles.reduce(function (chain, file, index) {
+      return chain.then(function (results) {
+        setProgress(0, "Membuat thumbnail video " + (index + 1) + " dari " + videoFiles.length + "...");
+        return capturePosterFrame(file).then(function (dataUrl) {
+          results.push(dataUrl);
+          return results;
+        });
+      });
+    }, Promise.resolve([]));
+
     var resizedImagesPromise = Promise.all(imageFiles.map(resizeImage));
 
     Promise.all([resizedImagesPromise, posterPromise])

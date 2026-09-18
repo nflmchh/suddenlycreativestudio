@@ -223,8 +223,12 @@ document.addEventListener("DOMContentLoaded", function () {
     eventModalBody.querySelectorAll(".gallery-video").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var src = btn.getAttribute("data-video-src");
+        var posterImg = btn.querySelector("img");
         var video = document.createElement("video");
         video.src = src;
+        if (posterImg) {
+          video.poster = posterImg.src;
+        }
         video.controls = true;
         video.autoplay = true;
         video.playsInline = true;
