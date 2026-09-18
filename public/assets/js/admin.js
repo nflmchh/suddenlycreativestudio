@@ -1,4 +1,57 @@
 document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".regenerate-poster-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var figure = btn.closest("figure");
+      var videoSrc = figure ? figure.getAttribute("data-video-src") : null;
+      var postUrl = btn.getAttribute("data-media-poster-url");
+      if (!videoSrc || !postUrl) return;
+
+      var originalLabel = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Memproses...";
+
+      fetch(videoSrc)
+        .then(function (res) {
+          return res.blob();
+        })
+        .then(function (blob) {
+          return capturePosterFrame(blob);
+        })
+        .then(function (dataUrl) {
+          if (!dataUrl) {
+            throw new Error("empty poster");
+          }
+          var token = document.querySelector('meta[name="csrf-token"]');
+          return fetch(postUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": token ? token.getAttribute("content") : "",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ poster: dataUrl }),
+          });
+        })
+        .then(function (res) {
+          if (!res.ok) throw new Error("save failed");
+          return res.json();
+        })
+        .then(function (data) {
+          var img = figure.querySelector(".media-thumb-img");
+          if (img && data.poster_url) {
+            img.src = data.poster_url + "?t=" + Date.now();
+          }
+          btn.textContent = originalLabel;
+          btn.disabled = false;
+        })
+        .catch(function () {
+          alert("Gagal membuat thumbnail. Coba lagi, atau hapus dan upload ulang videonya.");
+          btn.textContent = originalLabel;
+          btn.disabled = false;
+        });
+    });
+  });
+
   var form = document.getElementById("eventForm");
   if (!form) {
     return;

@@ -120,6 +120,29 @@ class EventController extends Controller
         return redirect()->route('admin.events.edit', $event)->with('status', 'Media dihapus.');
     }
 
+    public function regeneratePoster(Request $request, EventMedia $media)
+    {
+        abort_unless($media->isVideo(), 422);
+
+        $request->validate([
+            'poster' => ['required', 'string', 'starts_with:data:image'],
+        ]);
+
+        $path = $this->savePosterFromDataUrl($request->input('poster'), $media->event_id);
+
+        if (! $path) {
+            return response()->json(['message' => 'Gagal memproses thumbnail. Coba lagi.'], 422);
+        }
+
+        if ($media->poster_path) {
+            Storage::disk('public')->delete($media->poster_path);
+        }
+
+        $media->update(['poster_path' => $path]);
+
+        return response()->json(['poster_url' => asset('storage/'.$path)]);
+    }
+
     protected function validateEvent(Request $request): array
     {
         return $request->validate([

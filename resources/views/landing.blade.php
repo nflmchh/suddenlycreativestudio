@@ -284,9 +284,9 @@
                                             <span class="gallery-play"><i class="ph-fill ph-play"></i></span>
                                         </button>
                                     @else
-                                        <div class="gallery-item gallery-image">
+                                        <button type="button" class="gallery-item gallery-image" aria-label="Lihat foto">
                                             <img src="{{ asset('storage/'.$media->file_path) }}" alt="" draggable="false" oncontextmenu="return false;">
-                                        </div>
+                                        </button>
                                     @endif
                                 @endforeach
                             </div>
@@ -307,6 +307,13 @@
                 <span class="title" id="eventModalTitle">event.exe</span>
             </div>
             <div class="event-modal-body" id="eventModalBody"></div>
+        </div>
+    </div>
+
+    <div class="media-lightbox" id="mediaLightbox" aria-hidden="true">
+        <div class="media-lightbox-inner">
+            <span class="media-lightbox-close" id="mediaLightboxClose" role="button" tabindex="0" aria-label="Tutup">&times;</span>
+            <div class="media-lightbox-content" id="mediaLightboxContent"></div>
         </div>
     </div>
 

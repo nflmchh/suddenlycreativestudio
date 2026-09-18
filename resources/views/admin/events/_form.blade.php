@@ -67,19 +67,25 @@
         <label>Media Saat Ini</label>
         <div class="media-grid">
             @foreach ($event->media as $media)
-                <figure>
-                    @if ($media->isVideo())
-                        <img src="{{ $media->poster_path ? asset('storage/'.$media->poster_path) : asset('assets/img/logo-icon.png') }}" alt="">
-                    @else
-                        <img src="{{ asset('storage/'.$media->file_path) }}" alt="">
-                    @endif
+                <figure @if ($media->isVideo()) data-video-src="{{ asset('storage/'.$media->file_path) }}" @endif>
+                    <div class="media-thumb-wrap">
+                        <img class="media-thumb-img" src="{{ $media->isVideo() ? ($media->poster_path ? asset('storage/'.$media->poster_path) : asset('assets/img/logo-icon.png')) : asset('storage/'.$media->file_path) }}" alt="">
+                        @if ($media->isVideo())
+                            <span class="media-thumb-play"><i class="ph-fill ph-play"></i></span>
+                        @endif
+                    </div>
                     <figcaption>
                         <span>{{ $media->isVideo() ? 'Video' : 'Foto' }}</span>
-                        <form method="POST" action="{{ route('admin.media.destroy', $media) }}" onsubmit="return confirm('Hapus media ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Hapus</button>
-                        </form>
+                        <div class="media-actions">
+                            @if ($media->isVideo())
+                                <button type="button" class="regenerate-poster-btn" data-media-id="{{ $media->id }}" data-media-poster-url="{{ route('admin.media.poster', $media) }}">Buat ulang thumbnail</button>
+                            @endif
+                            <form method="POST" action="{{ route('admin.media.destroy', $media) }}" onsubmit="return confirm('Hapus media ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">Hapus</button>
+                            </form>
+                        </div>
                     </figcaption>
                 </figure>
             @endforeach

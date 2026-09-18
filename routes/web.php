@@ -26,6 +26,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
         Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
         Route::delete('/media/{media}', [EventController::class, 'destroyMedia'])->name('media.destroy');
+        Route::post('/media/{media}/poster', [EventController::class, 'regeneratePoster'])->name('media.poster');
 
         Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
