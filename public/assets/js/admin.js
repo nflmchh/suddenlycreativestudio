@@ -105,6 +105,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Manual thumbnail upload — a guaranteed fallback that doesn't depend on
+  // the browser being able to decode the video at all. Take a screenshot
+  // of the video (or export a frame in QuickTime Player) and upload it here.
+  document.querySelectorAll(".manual-poster-input").forEach(function (input) {
+    input.addEventListener("change", function () {
+      var file = input.files[0];
+      if (!file) return;
+
+      var postUrl = input.getAttribute("data-media-poster-url");
+      var figure = input.closest("figure");
+      var token = document.querySelector('meta[name="csrf-token"]');
+
+      var formData = new FormData();
+      formData.append("poster_image", file);
+
+      input.disabled = true;
+
+      fetch(postUrl, {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": token ? token.getAttribute("content") : "",
+          Accept: "application/json",
+        },
+        body: formData,
+      })
+        .then(function (res) {
+          if (res.ok) return res.json();
+          return res
+            .json()
+            .catch(function () {
+              return {};
+            })
+            .then(function (data) {
+              throw new Error(data.message || "Server menolak (status " + res.status + ")");
+            });
+        })
+        .then(function (data) {
+          var img = figure.querySelector(".media-thumb-img");
+          if (img && data.poster_url) {
+            img.src = data.poster_url + "?t=" + Date.now();
+          }
+          input.disabled = false;
+          input.value = "";
+        })
+        .catch(function (err) {
+          alert("Gagal upload thumbnail manual: " + err.message);
+          input.disabled = false;
+          input.value = "";
+        });
+    });
+  });
+
   var form = document.getElementById("eventForm");
   if (!form) {
     return;

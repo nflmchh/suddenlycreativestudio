@@ -81,7 +81,7 @@
                         <span>{{ $media->isVideo() ? 'Video' : 'Foto' }}</span>
                         <div class="media-actions">
                             @if ($media->isVideo())
-                                <button type="button" class="regenerate-poster-btn" data-media-id="{{ $media->id }}" data-media-poster-url="{{ route('admin.media.poster', $media) }}">Buat ulang thumbnail</button>
+                                <button type="button" class="regenerate-poster-btn" data-media-id="{{ $media->id }}" data-media-poster-url="{{ route('admin.media.poster', $media) }}">Buat otomatis</button>
                             @endif
                             <form method="POST" action="{{ route('admin.media.destroy', $media) }}" onsubmit="return confirm('Hapus media ini?');">
                                 @csrf
@@ -89,6 +89,12 @@
                                 <button type="submit">Hapus</button>
                             </form>
                         </div>
+                        @if ($media->isVideo())
+                            <label class="manual-poster-label">
+                                Upload thumbnail sendiri
+                                <input type="file" class="manual-poster-input" accept="image/jpeg,image/png" data-media-poster-url="{{ route('admin.media.poster', $media) }}">
+                            </label>
+                        @endif
                     </figcaption>
                 </figure>
             @endforeach

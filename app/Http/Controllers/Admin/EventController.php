@@ -124,11 +124,17 @@ class EventController extends Controller
     {
         abort_unless($media->isVideo(), 422);
 
-        $request->validate([
-            'poster' => ['required', 'string', 'starts_with:data:image'],
-        ]);
-
-        $path = $this->savePosterFromDataUrl($request->input('poster'), $media->event_id);
+        if ($request->hasFile('poster_image')) {
+            $request->validate([
+                'poster_image' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:8192'],
+            ]);
+            $path = $request->file('poster_image')->store("events/{$media->event_id}/posters", 'public');
+        } else {
+            $request->validate([
+                'poster' => ['required', 'string', 'starts_with:data:image'],
+            ]);
+            $path = $this->savePosterFromDataUrl($request->input('poster'), $media->event_id);
+        }
 
         if (! $path) {
             return response()->json(['message' => 'Gagal memproses thumbnail. Coba lagi.'], 422);

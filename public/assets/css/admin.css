@@ -311,3 +311,18 @@ body.admin-body {
   opacity: 0.5;
   cursor: wait;
 }
+
+.manual-poster-label {
+  display: block;
+  font-size: 10px;
+  color: var(--y2k-ink-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.manual-poster-input {
+  display: block;
+  font-size: 10px;
+  margin-top: 2px;
+  max-width: 100%;
+}
