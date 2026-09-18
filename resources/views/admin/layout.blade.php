@@ -20,6 +20,7 @@
         <nav class="admin-nav">
             <a href="{{ route('admin.dashboard') }}">Events</a>
             <a href="{{ route('admin.events.create') }}">Tambah Event</a>
+            <a href="{{ route('admin.clients.index') }}">Clients</a>
             <a href="{{ route('admin.password.edit') }}">Ganti Password</a>
             <a href="{{ url('/') }}" target="_blank">Lihat Situs</a>
             <form method="POST" action="{{ route('admin.logout') }}" style="display:inline;">

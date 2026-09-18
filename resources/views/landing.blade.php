@@ -18,17 +18,6 @@
 
     $categories = config('portfolio.categories');
 
-    // Real client/sponsor logos, carried over from the previously hosted site.
-    $brands = [
-        ['file' => 'kemendikbud.jpg', 'name' => 'Kementerian Pendidikan dan Kebudayaan'],
-        ['file' => 'ibox.jpg', 'name' => 'iBox'],
-        ['file' => 'redbox.png', 'name' => 'RedBox Event'],
-        ['file' => 'pln.png', 'name' => 'PLN'],
-        ['file' => 'telkomsel.webp', 'name' => 'Telkomsel'],
-        ['file' => 'coklat-kita.jpg', 'name' => 'Coklat Kita'],
-        ['file' => 'xlsmart.png', 'name' => 'XLSMART'],
-    ];
-
     $waNumber = '6285172110725';
     $waLink = 'https://wa.me/' . $waNumber . '?text=' . urlencode('Halo Suddenly Creative Studio, saya ingin bertanya tentang layanan Anda.');
     $igLink = 'https://instagram.com/suddenlycreative.id';
@@ -131,35 +120,37 @@
     </header>
 
     <!-- Clients / brand marquee -->
-    <section class="clients-section reveal">
-        <div class="container">
-            <div class="section-tag center" style="display:table;">Dipercaya Oleh</div>
-        </div>
-
-        <div class="marquee-window">
-            <div class="window-bar">
-                <div class="traffic-lights">
-                    <span class="red"></span><span class="yellow"></span><span class="green"></span>
-                </div>
-                <span class="title">clients.exe</span>
+    @if ($clients->isNotEmpty())
+        <section class="clients-section reveal">
+            <div class="container">
+                <div class="section-tag center" style="display:table;">Dipercaya Oleh</div>
             </div>
 
-            <div class="marquee-body">
-                <div class="marquee-track">
-                    @foreach ($brands as $brand)
-                        <div class="marquee-item">
-                            <img src="{{ asset('assets/img/brands/' . $brand['file']) }}" alt="{{ $brand['name'] }}" loading="lazy">
-                        </div>
-                    @endforeach
-                    @foreach ($brands as $brand)
-                        <div class="marquee-item" aria-hidden="true">
-                            <img src="{{ asset('assets/img/brands/' . $brand['file']) }}" alt="" loading="lazy">
-                        </div>
-                    @endforeach
+            <div class="marquee-window">
+                <div class="window-bar">
+                    <div class="traffic-lights">
+                        <span class="red"></span><span class="yellow"></span><span class="green"></span>
+                    </div>
+                    <span class="title">clients.exe</span>
+                </div>
+
+                <div class="marquee-body">
+                    <div class="marquee-track">
+                        @foreach ($clients as $client)
+                            <div class="marquee-item">
+                                <img src="{{ asset('storage/'.$client->logo_path) }}" alt="{{ $client->name }}" loading="lazy">
+                            </div>
+                        @endforeach
+                        @foreach ($clients as $client)
+                            <div class="marquee-item" aria-hidden="true">
+                                <img src="{{ asset('storage/'.$client->logo_path) }}" alt="" loading="lazy">
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     <!-- About -->
     <section class="section" id="about">

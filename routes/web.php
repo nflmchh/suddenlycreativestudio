@@ -1,15 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PasswordController;
+use App\Models\Client;
 use App\Models\Event;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $events = Event::published()->ordered()->with('media')->get();
+    $clients = Client::ordered()->get();
 
-    return view('landing', compact('events'));
+    return view('landing', compact('events', 'clients'));
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -27,6 +30,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
         Route::delete('/media/{media}', [EventController::class, 'destroyMedia'])->name('media.destroy');
         Route::post('/media/{media}/poster', [EventController::class, 'regeneratePoster'])->name('media.poster');
+
+        Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+        Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
+        Route::put('/clients/{client}', [ClientController::class, 'update'])->name('clients.update');
+        Route::delete('/clients/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
 
         Route::get('/password', [PasswordController::class, 'edit'])->name('password.edit');
         Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
