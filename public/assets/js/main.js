@@ -176,4 +176,100 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateSlides();
   }
+
+  // Portfolio category filter
+  var filterPills = document.querySelectorAll(".filter-pill");
+  var portfolioCards = document.querySelectorAll(".portfolio-card");
+
+  filterPills.forEach(function (pill) {
+    pill.addEventListener("click", function () {
+      filterPills.forEach(function (p) {
+        p.classList.remove("is-active");
+      });
+      pill.classList.add("is-active");
+
+      var filter = pill.getAttribute("data-filter");
+      portfolioCards.forEach(function (card) {
+        var matches = filter === "all" || card.getAttribute("data-category") === filter;
+        card.classList.toggle("is-hidden", !matches);
+      });
+    });
+  });
+
+  // Event modal — clones a <template> so gallery media isn't fetched
+  // until the visitor actually opens that event.
+  var eventModal = document.getElementById("eventModal");
+  var eventModalBody = document.getElementById("eventModalBody");
+  var eventModalTitle = document.getElementById("eventModalTitle");
+  var eventModalClose = document.getElementById("eventModalClose");
+
+  var closeEventModal = function () {
+    if (!eventModal) return;
+    eventModal.classList.remove("is-open");
+    eventModal.setAttribute("aria-hidden", "true");
+    eventModalBody.innerHTML = "";
+  };
+
+  var openEventModal = function (targetId, title) {
+    var template = document.querySelector('template[data-event-template="' + targetId + '"]');
+    if (!template || !eventModal) return;
+
+    eventModalBody.innerHTML = "";
+    eventModalBody.appendChild(template.content.cloneNode(true));
+    eventModalTitle.textContent = title || "event.exe";
+    eventModal.classList.add("is-open");
+    eventModal.setAttribute("aria-hidden", "false");
+
+    eventModalBody.querySelectorAll(".gallery-video").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var src = btn.getAttribute("data-video-src");
+        var video = document.createElement("video");
+        video.src = src;
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.setAttribute("controlsList", "nodownload noremoteplayback");
+        video.setAttribute("disablePictureInPicture", "");
+        video.setAttribute("oncontextmenu", "return false;");
+        btn.replaceWith(video);
+      });
+    });
+  };
+
+  portfolioCards.forEach(function (card) {
+    var activate = function () {
+      openEventModal(card.getAttribute("data-event-target"), card.querySelector(".portfolio-info h3").textContent);
+    };
+    card.addEventListener("click", activate);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        activate();
+      }
+    });
+  });
+
+  if (eventModalClose) {
+    eventModalClose.addEventListener("click", closeEventModal);
+    eventModalClose.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        closeEventModal();
+      }
+    });
+  }
+
+  if (eventModal) {
+    eventModal.addEventListener("click", function (e) {
+      if (e.target === eventModal) {
+        closeEventModal();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && eventModal && eventModal.classList.contains("is-open")) {
+      closeEventModal();
+    }
+  });
 });

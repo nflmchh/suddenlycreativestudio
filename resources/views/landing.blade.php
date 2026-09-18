@@ -16,14 +16,7 @@
         ['icon' => 'ph-clipboard-text', 'label' => 'Show Management'],
     ];
 
-    $portfolio = [
-        ['title' => 'Corporate After Movie', 'tag' => 'After Movie', 'grad' => 'grad-1', 'icon' => 'ph-play'],
-        ['title' => 'Brand Motion Reel', 'tag' => 'Motion Design', 'grad' => 'grad-2', 'icon' => 'ph-waveform'],
-        ['title' => 'Festival Stage Show', 'tag' => 'Event Production', 'grad' => 'grad-3', 'icon' => 'ph-confetti'],
-        ['title' => '3D Product Animation', 'tag' => '3D Animator', 'grad' => 'grad-4', 'icon' => 'ph-cube'],
-        ['title' => 'Company Website', 'tag' => 'Website', 'grad' => 'grad-5', 'icon' => 'ph-browser'],
-        ['title' => 'Digital Art Series', 'tag' => 'Digital Art', 'grad' => 'grad-6', 'icon' => 'ph-palette'],
-    ];
+    $categories = config('portfolio.categories');
 
     // Real client/sponsor logos, carried over from the previously hosted site.
     $brands = [
@@ -237,31 +230,85 @@
         <div class="container">
             <div class="section-heading center reveal">
                 <div class="section-tag">Portfolio</div>
-                <h2>Contoh format showcase karya</h2>
-                <p>Tampilan di bawah ini adalah contoh format penyajian karya — koleksi karya asli akan diperbarui melalui panel admin studio.</p>
+                <h2>Karya yang pernah kami kerjakan</h2>
+                <p>Klik salah satu untuk lihat video dan foto lengkapnya — semua diputar langsung di sini, tanpa loading lama.</p>
             </div>
 
-            <div class="portfolio-grid">
-                @foreach ($portfolio as $item)
-                    <div class="portfolio-card reveal">
-                        <div class="window-bar">
-                            <div class="traffic-lights">
-                                <span class="red"></span><span class="yellow"></span><span class="green"></span>
-                            </div>
-                            <span class="title">{{ $item['title'] }}</span>
-                        </div>
-                        <div class="portfolio-thumb {{ $item['grad'] }}">
-                            <i class="ph {{ $item['icon'] }}"></i>
-                        </div>
-                        <div class="portfolio-info">
-                            <h3>{{ $item['title'] }}</h3>
-                            <span class="portfolio-tag">{{ $item['tag'] }}</span>
-                        </div>
-                    </div>
+            <div class="portfolio-filters reveal">
+                <button type="button" class="filter-pill is-active" data-filter="all">Semua</button>
+                @foreach ($categories as $key => $label)
+                    <button type="button" class="filter-pill" data-filter="{{ $key }}">{{ $label }}</button>
                 @endforeach
             </div>
+
+            @if ($events->isEmpty())
+                <p class="portfolio-empty reveal">Portfolio sedang disiapkan — karya lengkap akan segera tampil di sini.</p>
+            @else
+                <div class="portfolio-grid" id="portfolioGrid">
+                    @foreach ($events as $i => $event)
+                        <div class="portfolio-card reveal" data-category="{{ $event->category }}" data-event-target="event-{{ $event->id }}" tabindex="0" role="button" aria-label="Buka {{ $event->title }}">
+                            <div class="window-bar">
+                                <div class="traffic-lights">
+                                    <span class="red"></span><span class="yellow"></span><span class="green"></span>
+                                </div>
+                                <span class="title">{{ $event->title }}</span>
+                            </div>
+                            <div class="portfolio-thumb {{ 'grad-'.(($i % 6) + 1) }}">
+                                @if ($event->cover_image)
+                                    <img src="{{ asset('storage/'.$event->cover_image) }}" alt="{{ $event->title }}" loading="lazy" draggable="false" oncontextmenu="return false;">
+                                @else
+                                    <i class="ph ph-play"></i>
+                                @endif
+                            </div>
+                            <div class="portfolio-info">
+                                <h3>{{ $event->title }}</h3>
+                                <span class="portfolio-tag">{{ $event->categoryLabel() }}</span>
+                            </div>
+                        </div>
+
+                        <template data-event-template="event-{{ $event->id }}" data-event-title="{{ $event->title }}">
+                            <div class="event-modal-meta">
+                                <span class="portfolio-tag">{{ $event->categoryLabel() }}</span>
+                                @if ($event->client)
+                                    <span class="event-modal-client">Client: {{ $event->client }}</span>
+                                @endif
+                            </div>
+                            @if ($event->description)
+                                <p class="event-modal-desc">{{ $event->description }}</p>
+                            @endif
+                            <div class="event-gallery">
+                                @foreach ($event->media as $media)
+                                    @if ($media->isVideo())
+                                        <button type="button" class="gallery-item gallery-video" data-video-src="{{ asset('storage/'.$media->file_path) }}" aria-label="Putar video">
+                                            <img src="{{ $media->poster_path ? asset('storage/'.$media->poster_path) : asset('assets/img/logo-icon.png') }}" alt="" draggable="false" oncontextmenu="return false;">
+                                            <span class="gallery-play"><i class="ph-fill ph-play"></i></span>
+                                        </button>
+                                    @else
+                                        <div class="gallery-item gallery-image">
+                                            <img src="{{ asset('storage/'.$media->file_path) }}" alt="" draggable="false" oncontextmenu="return false;">
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </template>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
+
+    <div class="event-modal" id="eventModal" aria-hidden="true">
+        <div class="event-modal-window">
+            <div class="window-bar">
+                <div class="traffic-lights">
+                    <span class="red" id="eventModalClose" role="button" tabindex="0" aria-label="Tutup"></span>
+                    <span class="yellow"></span><span class="green"></span>
+                </div>
+                <span class="title" id="eventModalTitle">event.exe</span>
+            </div>
+            <div class="event-modal-body" id="eventModalBody"></div>
+        </div>
+    </div>
 
     <!-- Shop teaser -->
     <section class="section" id="shop">

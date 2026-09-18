@@ -1,0 +1,261 @@
+/* Admin panel — utilitarian, reuses the Y2K tokens from style.css */
+
+body.admin-body {
+  background: var(--bg-page);
+  color: var(--y2k-ink);
+  min-height: 100vh;
+}
+
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: var(--border-w) solid var(--y2k-ink);
+}
+
+.admin-topbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.admin-topbar .brand img {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+}
+
+.admin-nav {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-nav a,
+.admin-nav button {
+  font: inherit;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid transparent;
+  background: transparent;
+  color: var(--y2k-ink);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.admin-nav a:hover,
+.admin-nav button:hover {
+  border-color: var(--y2k-ink);
+  background: var(--y2k-panel);
+}
+
+.admin-wrap {
+  max-width: 960px;
+  margin-inline: auto;
+  padding: 32px 20px 80px;
+}
+
+.admin-card {
+  background: #fff;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-card h1,
+.admin-card h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.admin-status {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  background: var(--y2k-mint);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-errors {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  background: var(--y2k-pink);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-errors ul {
+  list-style: disc;
+  padding-left: 18px;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.field .hint {
+  font-size: 12px;
+  color: var(--y2k-ink-muted);
+  margin-top: 4px;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  font: inherit;
+  background: #fff;
+  color: var(--y2k-ink);
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.field input[type="file"] {
+  display: block;
+  width: 100%;
+  font: inherit;
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.admin-login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 360px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--y2k-panel);
+  vertical-align: middle;
+}
+
+.admin-table thead th {
+  border-bottom: var(--border-w) solid var(--y2k-ink);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.admin-table img.thumb {
+  width: 56px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+}
+
+.admin-table .row-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-published { background: var(--y2k-mint); }
+.badge-draft { background: var(--y2k-panel); }
+
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.media-grid figure {
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--y2k-panel);
+}
+
+.media-grid img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.media-grid figcaption {
+  padding: 6px 8px;
+  font-size: 11px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.media-grid figcaption button {
+  font: inherit;
+  border: none;
+  background: none;
+  color: var(--y2k-ink);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 11px;
+}
