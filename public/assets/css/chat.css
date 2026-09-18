@@ -9,16 +9,15 @@
 
 .yorii-launcher {
   position: relative;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  height: 56px;
+  border-radius: 999px;
   border: var(--border-w) solid var(--y2k-ink);
   background: var(--y2k-lemon);
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0;
+  gap: 10px;
+  padding: 4px 18px 4px 4px;
   transition: transform 0.15s var(--ease-snappy);
 }
 
@@ -30,16 +29,31 @@
   transform: scale(0.95);
 }
 
-.yorii-launcher img {
-  width: 60%;
-  height: 60%;
-  object-fit: contain;
+.yorii-launcher-avatar {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #fff;
+  border: var(--border-w) solid var(--y2k-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.yorii-launcher-label {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--y2k-ink);
+  white-space: nowrap;
 }
 
 .yorii-launcher-badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: -2px;
+  right: -2px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -253,5 +267,15 @@
   .yorii-panel {
     right: 14px;
     bottom: 84px;
+  }
+}
+
+@media (max-width: 360px) {
+  .yorii-launcher {
+    padding: 4px;
+  }
+
+  .yorii-launcher-label {
+    display: none;
   }
 }
