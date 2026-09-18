@@ -9,15 +9,15 @@
 
 .yorii-launcher {
   position: relative;
-  height: 56px;
+  height: 72px;
   border-radius: 999px;
   border: var(--border-w) solid var(--y2k-ink);
-  background: var(--y2k-lemon);
+  background: var(--y2k-panel);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px 4px 4px 18px;
+  gap: 18px;
+  padding: 4px 4px 4px 22px;
   transition: transform 0.15s var(--ease-snappy);
 }
 
@@ -30,12 +30,13 @@
 }
 
 .yorii-launcher-avatar {
-  width: 46px;
-  height: 46px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: #fff;
-  border: var(--border-w) solid var(--y2k-ink);
+  background: transparent;
+  border: 3px solid var(--y2k-pink);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--y2k-ink);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -50,18 +51,20 @@
 }
 
 .yorii-launcher-label {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 14px;
+  letter-spacing: 0.02em;
   color: var(--y2k-ink);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
   white-space: nowrap;
 }
 
 .yorii-launcher-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  width: 14px;
-  height: 14px;
+  top: 0px;
+  right: 4px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   background: var(--y2k-pink, #ff6fae);
   border: 2px solid var(--y2k-ink);
@@ -76,7 +79,7 @@
 .yorii-panel {
   position: fixed;
   right: 20px;
-  bottom: 92px;
+  bottom: 108px;
   width: min(360px, calc(100vw - 32px));
   height: min(520px, calc(100vh - 140px));
   display: none;
@@ -272,13 +275,19 @@
 
   .yorii-panel {
     right: 14px;
-    bottom: 84px;
+    bottom: 100px;
   }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 380px) {
   .yorii-launcher {
+    height: 60px;
     padding: 4px;
+  }
+
+  .yorii-launcher-avatar {
+    width: 52px;
+    height: 52px;
   }
 
   .yorii-launcher-label {
