@@ -26,6 +26,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Suddenly Creative Studio — Visual Production, Event & Digital Creative</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo-icon.png') }}">
     <meta name="description" content="Suddenly Creative Studio menyediakan jasa visual production, 3D animation, motion design, event production, hingga website & apps di Bandung.">
@@ -463,6 +464,30 @@
         </div>
     </footer>
 
+    <div class="suci-widget" id="suciWidget">
+        <button type="button" class="suci-launcher" id="suciLauncher" aria-label="Chat dengan Suci">
+            <img src="{{ asset('assets/img/logo-icon.png') }}" alt="">
+            <span class="suci-launcher-badge" id="suciLauncherBadge" aria-hidden="true"></span>
+        </button>
+
+        <div class="suci-panel" id="suciPanel" aria-hidden="true">
+            <div class="window-bar">
+                <div class="traffic-lights">
+                    <span class="red" id="suciClose" role="button" tabindex="0" aria-label="Tutup"></span>
+                    <span class="yellow"></span><span class="green"></span>
+                </div>
+                <span class="title">Suci — Asisten Suddenly Creative</span>
+            </div>
+            <div class="suci-messages" id="suciMessages"></div>
+            <form class="suci-input-row" id="suciForm" data-chat-url="{{ route('chat.send') }}">
+                <input type="text" id="suciInput" placeholder="Tulis pertanyaan kamu..." autocomplete="off" maxlength="1000">
+                <button type="submit" aria-label="Kirim"><i class="ph-fill ph-paper-plane-tilt"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{ asset('assets/css/chat.css') }}?v={{ @filemtime(public_path('assets/css/chat.css')) ?: time() }}">
     <script src="{{ asset('assets/js/main.js') }}?v={{ @filemtime(public_path('assets/js/main.js')) ?: time() }}"></script>
+    <script src="{{ asset('assets/js/chat.js') }}?v={{ @filemtime(public_path('assets/js/chat.js')) ?: time() }}"></script>
 </body>
 </html>

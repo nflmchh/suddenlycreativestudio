@@ -1,0 +1,186 @@
+/* Suci — chat assistant widget */
+
+.suci-widget {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 150;
+}
+
+.suci-launcher {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: var(--border-w) solid var(--y2k-ink);
+  background: var(--y2k-lemon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s var(--ease-snappy);
+}
+
+.suci-launcher:hover {
+  transform: scale(1.05);
+}
+
+.suci-launcher:active {
+  transform: scale(0.95);
+}
+
+.suci-launcher img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.suci-launcher-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--y2k-pink, #ff6fae);
+  border: 2px solid var(--y2k-ink);
+  animation: suci-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes suci-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+.suci-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 92px;
+  width: min(360px, calc(100vw - 32px));
+  height: min(520px, calc(100vh - 140px));
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 12px 0 rgba(10, 10, 20, 0.08);
+}
+
+.suci-panel.is-open {
+  display: flex;
+}
+
+.suci-panel .window-bar {
+  flex-shrink: 0;
+}
+
+.suci-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--y2k-panel);
+}
+
+.suci-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: var(--border-w) solid var(--y2k-ink);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.suci-bubble-assistant {
+  align-self: flex-start;
+  background: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+.suci-bubble-user {
+  align-self: flex-end;
+  background: var(--y2k-lemon);
+  border-bottom-right-radius: 4px;
+}
+
+.suci-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+}
+
+.suci-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--y2k-ink);
+  opacity: 0.4;
+  animation: suci-typing-bounce 1.1s ease-in-out infinite;
+}
+
+.suci-typing span:nth-child(2) { animation-delay: 0.15s; }
+.suci-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes suci-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.suci-input-row {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: var(--border-w) solid var(--y2k-ink);
+  background: #fff;
+}
+
+.suci-input-row input {
+  flex: 1;
+  border: var(--border-w) solid var(--y2k-ink);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.suci-input-row input:focus {
+  outline: none;
+  background: var(--y2k-panel);
+}
+
+.suci-input-row button {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: var(--border-w) solid var(--y2k-ink);
+  background: var(--y2k-lemon);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.suci-input-row button:hover {
+  background: var(--y2k-pink);
+}
+
+@media (max-width: 480px) {
+  .suci-widget {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .suci-panel {
+    right: 14px;
+    bottom: 84px;
+  }
+}

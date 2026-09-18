@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\PasswordController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\ChatController;
 use App\Models\Client;
 use App\Models\Event;
 use App\Models\SiteSetting;
@@ -17,6 +18,8 @@ Route::get('/', function () {
 
     return view('landing', compact('events', 'clients', 'settings'));
 });
+
+Route::post('/chat', [ChatController::class, 'send'])->middleware('throttle:20,1')->name('chat.send');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
