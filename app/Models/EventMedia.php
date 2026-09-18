@@ -11,6 +11,7 @@ class EventMedia extends Model
         'event_id',
         'type',
         'file_path',
+        'original_filename',
         'poster_path',
         'sort_order',
     ];

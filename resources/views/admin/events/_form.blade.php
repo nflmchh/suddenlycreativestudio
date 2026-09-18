@@ -79,6 +79,9 @@
                     </div>
                     <figcaption>
                         <span>{{ $media->isVideo() ? 'Video' : 'Foto' }}</span>
+                        @if ($media->isVideo() && $media->original_filename)
+                            <span class="media-filename" title="{{ $media->original_filename }}">{{ $media->original_filename }}</span>
+                        @endif
                         <div class="media-actions">
                             @if ($media->isVideo())
                                 <button type="button" class="regenerate-poster-btn" data-media-id="{{ $media->id }}" data-media-poster-url="{{ route('admin.media.poster', $media) }}">Buat otomatis</button>

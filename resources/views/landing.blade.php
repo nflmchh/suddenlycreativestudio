@@ -279,12 +279,15 @@
                             <div class="event-gallery">
                                 @foreach ($event->media as $media)
                                     @if ($media->isVideo())
-                                        <button type="button" class="gallery-item gallery-video" data-video-src="{{ asset('storage/'.$media->file_path) }}" aria-label="Putar video">
+                                        <button type="button" class="gallery-item gallery-video" data-video-src="{{ asset('storage/'.$media->file_path) }}" data-media-title="{{ $media->original_filename }}" aria-label="Putar video">
                                             <img src="{{ $media->poster_path ? asset('storage/'.$media->poster_path) : asset('assets/img/logo-icon.png') }}" alt="" draggable="false" oncontextmenu="return false;">
                                             <span class="gallery-play"><i class="ph-fill ph-play"></i></span>
+                                            @if ($media->original_filename)
+                                                <span class="gallery-filename">{{ $media->original_filename }}</span>
+                                            @endif
                                         </button>
                                     @else
-                                        <button type="button" class="gallery-item gallery-image" aria-label="Lihat foto">
+                                        <button type="button" class="gallery-item gallery-image" data-media-title="{{ $media->original_filename }}" aria-label="Lihat foto">
                                             <img src="{{ asset('storage/'.$media->file_path) }}" alt="" draggable="false" oncontextmenu="return false;">
                                         </button>
                                     @endif
@@ -311,9 +314,19 @@
     </div>
 
     <div class="media-lightbox" id="mediaLightbox" aria-hidden="true">
-        <div class="media-lightbox-inner">
-            <span class="media-lightbox-close" id="mediaLightboxClose" role="button" tabindex="0" aria-label="Tutup">&times;</span>
-            <div class="media-lightbox-content" id="mediaLightboxContent"></div>
+        <div class="media-lightbox-window">
+            <div class="window-bar">
+                <div class="traffic-lights">
+                    <span class="red" id="mediaLightboxClose" role="button" tabindex="0" aria-label="Tutup"></span>
+                    <span class="yellow"></span><span class="green"></span>
+                </div>
+                <span class="title" id="mediaLightboxTitle">media.exe</span>
+            </div>
+            <div class="media-lightbox-body">
+                <button type="button" class="media-lightbox-nav prev" id="mediaLightboxPrev" aria-label="Sebelumnya"><i class="ph ph-caret-left"></i></button>
+                <div class="media-lightbox-content" id="mediaLightboxContent"></div>
+                <button type="button" class="media-lightbox-nav next" id="mediaLightboxNext" aria-label="Berikutnya"><i class="ph ph-caret-right"></i></button>
+            </div>
         </div>
     </div>
 

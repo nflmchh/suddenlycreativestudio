@@ -312,6 +312,15 @@ body.admin-body {
   cursor: wait;
 }
 
+.media-filename {
+  display: block;
+  font-size: 10px;
+  color: var(--y2k-ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .manual-poster-label {
   display: block;
   font-size: 10px;

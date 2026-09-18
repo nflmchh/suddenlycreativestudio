@@ -203,11 +203,18 @@ document.addEventListener("DOMContentLoaded", function () {
   var eventModalTitle = document.getElementById("eventModalTitle");
   var eventModalClose = document.getElementById("eventModalClose");
 
-  // Media lightbox — opens a properly sized player/viewer above the event
-  // modal, instead of playing video cramped inside a small grid thumbnail.
+  // Media lightbox — opens a properly sized, themed player/viewer above the
+  // event modal, with prev/next to step through that event's whole gallery
+  // without closing and re-opening it for each item.
   var mediaLightbox = document.getElementById("mediaLightbox");
   var mediaLightboxContent = document.getElementById("mediaLightboxContent");
   var mediaLightboxClose = document.getElementById("mediaLightboxClose");
+  var mediaLightboxTitle = document.getElementById("mediaLightboxTitle");
+  var mediaLightboxPrev = document.getElementById("mediaLightboxPrev");
+  var mediaLightboxNext = document.getElementById("mediaLightboxNext");
+
+  var currentGalleryItems = [];
+  var currentGalleryIndex = -1;
 
   var buildWatermark = function () {
     var watermark = document.createElement("div");
@@ -224,44 +231,73 @@ document.addEventListener("DOMContentLoaded", function () {
     mediaLightbox.classList.remove("is-open");
     mediaLightbox.setAttribute("aria-hidden", "true");
     mediaLightboxContent.innerHTML = "";
+    currentGalleryItems = [];
+    currentGalleryIndex = -1;
   };
 
-  var openImageLightbox = function (src) {
-    if (!mediaLightbox) return;
+  var renderLightboxItem = function (index) {
+    var item = currentGalleryItems[index];
+    if (!item || !mediaLightbox) return;
+
+    currentGalleryIndex = index;
     mediaLightboxContent.innerHTML = "";
 
-    var img = document.createElement("img");
-    img.src = src;
-    img.draggable = false;
-    img.setAttribute("oncontextmenu", "return false;");
-    mediaLightboxContent.appendChild(img);
-
-    mediaLightbox.classList.add("is-open");
-    mediaLightbox.setAttribute("aria-hidden", "false");
-  };
-
-  var openVideoLightbox = function (src, poster) {
-    if (!mediaLightbox) return;
-    mediaLightboxContent.innerHTML = "";
-
-    var video = document.createElement("video");
-    video.src = src;
-    if (poster) {
-      video.poster = poster;
+    if (mediaLightboxTitle) {
+      mediaLightboxTitle.textContent = item.title || (item.type === "video" ? "Video" : "Foto");
     }
-    video.controls = true;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.setAttribute("controlsList", "nodownload noremoteplayback");
-    video.setAttribute("disablePictureInPicture", "");
-    video.setAttribute("oncontextmenu", "return false;");
 
-    mediaLightboxContent.appendChild(video);
-    mediaLightboxContent.appendChild(buildWatermark());
+    if (item.type === "video") {
+      var video = document.createElement("video");
+      video.src = item.src;
+      if (item.poster) {
+        video.poster = item.poster;
+      }
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.setAttribute("controlsList", "nodownload noremoteplayback");
+      video.setAttribute("disablePictureInPicture", "");
+      video.setAttribute("oncontextmenu", "return false;");
+      mediaLightboxContent.appendChild(video);
+      mediaLightboxContent.appendChild(buildWatermark());
+    } else {
+      var img = document.createElement("img");
+      img.src = item.src;
+      img.draggable = false;
+      img.setAttribute("oncontextmenu", "return false;");
+      mediaLightboxContent.appendChild(img);
+    }
+
+    var hasMultiple = currentGalleryItems.length > 1;
+    if (mediaLightboxPrev) mediaLightboxPrev.disabled = !hasMultiple;
+    if (mediaLightboxNext) mediaLightboxNext.disabled = !hasMultiple;
 
     mediaLightbox.classList.add("is-open");
     mediaLightbox.setAttribute("aria-hidden", "false");
   };
+
+  var openLightboxAt = function (items, index) {
+    currentGalleryItems = items;
+    renderLightboxItem(index);
+  };
+
+  var stepLightbox = function (delta) {
+    if (!currentGalleryItems.length) return;
+    var next = (currentGalleryIndex + delta + currentGalleryItems.length) % currentGalleryItems.length;
+    renderLightboxItem(next);
+  };
+
+  if (mediaLightboxPrev) {
+    mediaLightboxPrev.addEventListener("click", function () {
+      stepLightbox(-1);
+    });
+  }
+
+  if (mediaLightboxNext) {
+    mediaLightboxNext.addEventListener("click", function () {
+      stepLightbox(1);
+    });
+  }
 
   if (mediaLightboxClose) {
     mediaLightboxClose.addEventListener("click", closeMediaLightbox);
@@ -298,20 +334,28 @@ document.addEventListener("DOMContentLoaded", function () {
     eventModal.classList.add("is-open");
     eventModal.setAttribute("aria-hidden", "false");
 
-    eventModalBody.querySelectorAll(".gallery-video").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var src = btn.getAttribute("data-video-src");
+    var galleryButtons = Array.prototype.slice.call(eventModalBody.querySelectorAll(".gallery-item"));
+    var galleryItems = galleryButtons.map(function (btn) {
+      if (btn.classList.contains("gallery-video")) {
         var posterImg = btn.querySelector("img");
-        openVideoLightbox(src, posterImg ? posterImg.src : null);
-      });
+        return {
+          type: "video",
+          src: btn.getAttribute("data-video-src"),
+          poster: posterImg ? posterImg.src : null,
+          title: btn.getAttribute("data-media-title") || "Video",
+        };
+      }
+      var img = btn.querySelector("img");
+      return {
+        type: "image",
+        src: img ? img.src : "",
+        title: btn.getAttribute("data-media-title") || "Foto",
+      };
     });
 
-    eventModalBody.querySelectorAll(".gallery-image").forEach(function (btn) {
+    galleryButtons.forEach(function (btn, index) {
       btn.addEventListener("click", function () {
-        var img = btn.querySelector("img");
-        if (img) {
-          openImageLightbox(img.src);
-        }
+        openLightboxAt(galleryItems, index);
       });
     });
   };
@@ -348,10 +392,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape") return;
     if (mediaLightbox && mediaLightbox.classList.contains("is-open")) {
-      closeMediaLightbox();
-    } else if (eventModal && eventModal.classList.contains("is-open")) {
+      if (e.key === "Escape") {
+        closeMediaLightbox();
+      } else if (e.key === "ArrowLeft") {
+        stepLightbox(-1);
+      } else if (e.key === "ArrowRight") {
+        stepLightbox(1);
+      }
+    } else if (e.key === "Escape" && eventModal && eventModal.classList.contains("is-open")) {
       closeEventModal();
     }
   });

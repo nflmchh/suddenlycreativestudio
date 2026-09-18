@@ -174,6 +174,7 @@ class EventController extends Controller
             $event->media()->create([
                 'type' => 'image',
                 'file_path' => $path,
+                'original_filename' => $file->getClientOriginalName(),
                 'sort_order' => $nextOrder++,
             ]);
         }
@@ -195,6 +196,7 @@ class EventController extends Controller
             $event->media()->create([
                 'type' => 'video',
                 'file_path' => $path,
+                'original_filename' => $file->getClientOriginalName(),
                 'poster_path' => $posterPath,
                 'sort_order' => $nextOrder++,
             ]);
